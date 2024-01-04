@@ -6,8 +6,11 @@ import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class EncryptionUtils {
+    private static final Logger LOGGER = Logger.getLogger(EncryptionUtils.class.getName());
     private static final String ALGORITHM = "PBKDF2WithHmacSHA1";
 
     private static final int SALT_BYTES = 24;
@@ -71,7 +74,7 @@ public final class EncryptionUtils {
             SecretKeyFactory skf = SecretKeyFactory.getInstance(ALGORITHM);
             return skf.generateSecret(spec).getEncoded();
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            System.err.println("Error while computing hash !");
+            LOGGER.log(Level.SEVERE, "Greska u racunanju hash-a !", e);
         }
         return null;
     }

@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-<AnchorPane prefHeight="327.0" prefWidth="503.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
+<AnchorPane prefHeight="372.0" prefWidth="503.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="tech.goksi.projekatop.controllers.LoginController">
     <Label layoutX="111.0" layoutY="28.0" text="Login za nastavak">
         <font>
@@ -16,9 +16,13 @@
                    prefHeight="39.0" prefWidth="253.0" promptText="Unesite svoj password..."/>
     <Button layoutX="193.0" layoutY="230.0" mnemonicParsing="false" onAction="#onLoginClick" prefHeight="39.0"
             prefWidth="118.0" text="Login"/>
-    <Label fx:id="errorLabel" alignment="CENTER" layoutX="69.0" layoutY="286.0" textFill="RED">
+    <Label fx:id="errorLabel" alignment="CENTER" layoutX="-1.0" layoutY="286.0" prefHeight="27.0" prefWidth="503.0"
+           textAlignment="CENTER" textFill="RED">
         <font>
             <Font size="18.0"/>
         </font>
     </Label>
+    <Label layoutX="159.0" layoutY="341.0" text="Nemate nalog ?"/>
+    <Label layoutX="262.0" layoutY="341.0" onMouseClicked="#onRegisterClick"
+           style="-fx-underline: true; -fx-cursor: HAND;" text="Registrujte se !" textFill="#006699"/>
 </AnchorPane>

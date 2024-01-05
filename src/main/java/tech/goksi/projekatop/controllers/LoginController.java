@@ -3,7 +3,9 @@ package tech.goksi.projekatop.controllers;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -11,8 +13,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import tech.goksi.projekatop.TabbyViews;
 import tech.goksi.projekatop.persistance.DataStorage;
 import tech.goksi.projekatop.persistance.DataStorageInjectable;
+import tech.goksi.projekatop.utils.ControllerFactory;
+import tech.goksi.projekatop.utils.ViewLoader;
 
 public class LoginController implements DataStorageInjectable {
     @FXML
@@ -49,7 +55,12 @@ public class LoginController implements DataStorageInjectable {
                         Platform.runLater(() -> errorLabel.setText("Pogresan username ili sifra !"));
                         return;
                     }
-                    /*TODO: bilo koji drugi slucaj, uspesan login*/
+                    /*TODO: bilo koji drugi slucaj, uspesan login, ne svidja mi se ovako*/
+                    Parent mainWindow = ViewLoader.load(TabbyViews.MAIN.toString(),
+                            clazz -> ControllerFactory.controllerForClass(clazz, storage, korisnik));
+                    Stage mainStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                    Platform.runLater(() -> mainStage.setScene(new Scene(mainWindow)));
+
                 })
                 .thenRun(() -> Platform.runLater(() -> ((Control) actionEvent.getSource()).setDisable(false)));
     }

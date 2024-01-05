@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane prefHeight="577.0" prefWidth="1002.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="tech.goksi.projekatop.controllers.MainController">
+    <MenuBar fx:id="menuBar" layoutX="-1.0" prefHeight="29.0" prefWidth="1002.0">
+        <Menu fx:id="mojNalogMenu" mnemonicParsing="false" text="Moj nalog">
+            <MenuItem mnemonicParsing="false" text="Dobro dosli nazad %s !"/>
+            <SeparatorMenuItem mnemonicParsing="false"/>
+            <MenuItem mnemonicParsing="false" text="Podesavanja"/>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Porudzbine">
+            <MenuItem mnemonicParsing="false" text="Moje porudzbine"/>
+        </Menu>
+        <Menu fx:id="adminMenu" mnemonicParsing="false" text="Admin">
+            <MenuItem mnemonicParsing="false" text="Korisnici"/>
+            <MenuItem mnemonicParsing="false" text="Porudzbine"/>
+            <MenuItem mnemonicParsing="false" text="Restorani"/>
+        </Menu>
+        <Menu>
+            <graphic>
+                <Label text="Logout" onMouseClicked="#onLogoutClick"/>
+            </graphic>
+        </Menu>
+    </MenuBar>
+</AnchorPane>

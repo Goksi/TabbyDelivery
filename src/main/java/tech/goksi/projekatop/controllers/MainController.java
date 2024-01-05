@@ -44,6 +44,7 @@ public class MainController implements DataStorageInjectable, ModelInjectable {
     public void onLogoutClick() {
         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION, "Da li ste sigurni da zelite da se izlogujete ?", ButtonType.YES, ButtonType.NO);
         confirmation.setHeaderText(null);
+        confirmation.setTitle("Logout");
         confirmation.showAndWait();
         if (confirmation.getResult() == ButtonType.NO) return;
         Parent login = ViewLoader.load(TabbyViews.LOGIN.toString(),

@@ -1,6 +1,5 @@
 package tech.goksi.projekatop.controllers.nalog;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -38,9 +37,25 @@ public class PodesavanjaController implements DataStorageInjectable, KorisnikInj
         this.storage = storage;
     }
 
-    public void onPromeniLoznikuClick(ActionEvent actionEvent) {
+    public void onPromeniLoznikuClick() {
+        String password = passwordField.getText();
+        if (password.length() < 8) {
+            passwordField.getStyleClass().add("error-field");
+            errorLabel.setText("Sifra mora da ima najmanje 8 karaktera !");
+            return;
+        }
+        String repeatedPassword = repeatedPasswordField.getText();
+        if (!password.equals(repeatedPassword)) {
+            repeatedPasswordField.getStyleClass().add("error-field");
+            errorLabel.setText("Sifre se ne podudaraju !");
+            return;
+        }
+        // TODO uspesna promena
     }
 
     public void onFieldWrite(KeyEvent keyEvent) {
+        PasswordField passwordField = (PasswordField) keyEvent.getSource();
+        passwordField.getStyleClass().remove("error-field");
+        errorLabel.setText("");
     }
 }

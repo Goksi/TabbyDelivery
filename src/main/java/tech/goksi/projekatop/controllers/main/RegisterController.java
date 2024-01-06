@@ -46,7 +46,6 @@ public class RegisterController implements DataStorageInjectable {
             return;
         }
         if (!password.equals(repeatedPassword)) {
-            passwordField.getStyleClass().add("error-field");
             repeatedPasswordField.getStyleClass().add("error-field");
             errorLabel.setText("Sifre se ne podudaraju !");
             return;

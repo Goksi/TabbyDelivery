@@ -9,7 +9,9 @@ import tech.goksi.projekatop.utils.EncryptionUtils;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
@@ -28,6 +30,7 @@ public class SQLiteImpl implements DataStorage {
                     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\s
                     username VARCHAR(48) NOT NULL UNIQUE,\s
                     password VARCHAR(128) NOT NULL,\s
+                    creationDate DATETIME NOT NULL,\s
                     "admin" NOT NULL CHECK ("admin" IN (0, 1))
                     )
                     """);
@@ -50,8 +53,9 @@ public class SQLiteImpl implements DataStorage {
                     int id = resultSet.getInt("id");
                     String username = resultSet.getString("username");
                     String password = resultSet.getString("password");
+                    Date creationDate = resultSet.getDate("creationDate");
                     boolean admin = resultSet.getBoolean("admin");
-                    korisnici.add(new Korisnik(id, username, password, admin));
+                    korisnici.add(new Korisnik(id, username, password, creationDate, admin));
                 }
                 return korisnici;
             } catch (SQLException e) {
@@ -68,8 +72,9 @@ public class SQLiteImpl implements DataStorage {
                 if (resultSet.next()) {
                     int id = resultSet.getInt("id");
                     String password = resultSet.getString("password");
+                    Date creationDate = resultSet.getDate("creationDate");
                     boolean admin = resultSet.getBoolean("admin");
-                    return new Korisnik(id, username, password, admin);
+                    return new Korisnik(id, username, password, creationDate, admin);
                 }
                 return null;
             } catch (SQLException e) {
@@ -84,13 +89,13 @@ public class SQLiteImpl implements DataStorage {
         return CompletableFuture.runAsync(() -> {
             Korisnik korisnik = findUserByUsername(username).join();
             if (korisnik != null) throw new KorisnikExistException(korisnik.getUsername());
-            connection.withConnection("INSERT INTO Korisnici(username, password, admin) VALUES (?, ?, ?)", preparedStatement -> {
+            connection.withConnection("INSERT INTO Korisnici(username, password, creationDate, admin) VALUES (?, ?, ?, ?)", preparedStatement -> {
                 try {
                     preparedStatement.executeUpdate();
                 } catch (SQLException e) {
                     LOGGER.log(Level.SEVERE, "Greska u dodavanju korisnika u bazu podataka !", e);
                 }
-            }, username, EncryptionUtils.createHash(password), admin);
+            }, username, EncryptionUtils.createHash(password), Date.from(Instant.now()), admin);
         });
     }
 }

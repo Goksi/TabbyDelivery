@@ -47,11 +47,7 @@ public class LoginController implements DataStorageInjectable {
         ((Control) actionEvent.getSource()).setDisable(true);
         storage.findUserByUsername(username)
                 .thenAccept(korisnik -> {
-                    if (korisnik == null) {
-                        Platform.runLater(() -> errorLabel.setText("Pogresan username ili sifra !"));
-                        return;
-                    }
-                    if (!korisnik.tryLogin(password)) {
+                    if (korisnik == null || !korisnik.tryLogin(password)) {
                         Platform.runLater(() -> errorLabel.setText("Pogresan username ili sifra !"));
                         return;
                     }

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -110,7 +111,7 @@ public class SQLiteImpl implements DataStorage {
                 }
             }, EncryptionUtils.createHash(password), korisnik.getId());
 
-            return findUserByUsername(korisnik.getUsername()).join();
-        });
+            return findUserByUsername(korisnik.getUsername());
+        }).thenCompose(Function.identity());
     }
 }

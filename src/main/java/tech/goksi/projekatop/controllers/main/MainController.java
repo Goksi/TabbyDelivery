@@ -1,4 +1,4 @@
-package tech.goksi.projekatop.controllers;
+package tech.goksi.projekatop.controllers.main;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

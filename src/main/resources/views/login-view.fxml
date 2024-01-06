@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <AnchorPane prefHeight="372.0" prefWidth="503.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="tech.goksi.projekatop.controllers.LoginController">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="tech.goksi.projekatop.controllers.main.LoginController">
     <Label layoutX="111.0" layoutY="28.0" text="Login za nastavak">
         <font>
             <Font size="36.0"/>

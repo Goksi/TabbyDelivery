@@ -1,8 +1,10 @@
 package tech.goksi.projekatop.controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.SubScene;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -10,18 +12,22 @@ import tech.goksi.projekatop.TabbyViews;
 import tech.goksi.projekatop.models.Korisnik;
 import tech.goksi.projekatop.models.Model;
 import tech.goksi.projekatop.models.ModelInjectable;
+import tech.goksi.projekatop.paginating.PageNavigator;
 import tech.goksi.projekatop.persistance.DataStorage;
 import tech.goksi.projekatop.persistance.DataStorageInjectable;
 import tech.goksi.projekatop.utils.ControllerFactory;
 import tech.goksi.projekatop.utils.ViewLoader;
 
 public class MainController implements DataStorageInjectable, ModelInjectable {
+    private PageNavigator pageNavigator;
     @FXML
     private MenuBar menuBar;
     @FXML
     private Menu adminMenu;
     @FXML
     private Menu mojNalogMenu;
+    @FXML
+    private SubScene contentScene;
     private DataStorage storage;
     private Korisnik currentUser;
 
@@ -29,6 +35,7 @@ public class MainController implements DataStorageInjectable, ModelInjectable {
         if (!currentUser.isAdmin()) adminMenu.setVisible(false);
         MenuItem welcomeBackItem = mojNalogMenu.getItems().get(0);
         welcomeBackItem.setText(String.format(welcomeBackItem.getText(), currentUser.getUsername()));
+        pageNavigator = new PageNavigator(contentScene);
     }
 
     @Override
@@ -53,5 +60,11 @@ public class MainController implements DataStorageInjectable, ModelInjectable {
                 clazz -> ControllerFactory.controllerForClass(clazz, storage, null));
         Stage mainStage = (Stage) menuBar.getScene().getWindow();
         mainStage.setScene(new Scene(new StackPane(register, login)));
+    }
+
+    public void onMenuItemClick(ActionEvent actionEvent) {
+        if (actionEvent.getSource() instanceof MenuItem menuItem) {
+            pageNavigator.goToPage(menuItem);
+        }
     }
 }

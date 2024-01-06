@@ -3,6 +3,8 @@ package tech.goksi.projekatop.paginating;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.scene.control.MenuItem;
+import tech.goksi.projekatop.models.Korisnik;
+import tech.goksi.projekatop.persistance.DataStorage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +14,7 @@ public class PageNavigator {
     private final Map<Page, Parent> pages;
     private Parent currentPage;
 
-    public PageNavigator(SubScene rootScene) {
+    public PageNavigator(SubScene rootScene, DataStorage dataStorage, Korisnik currentUser) {
         this.rootScene = rootScene;
         pages = new HashMap<>();
     }

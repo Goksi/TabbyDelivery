@@ -1,7 +1,7 @@
 package tech.goksi.projekatop.utils;
 
-import tech.goksi.projekatop.models.Model;
-import tech.goksi.projekatop.models.ModelInjectable;
+import tech.goksi.projekatop.models.Korisnik;
+import tech.goksi.projekatop.models.KorisnikInjectable;
 import tech.goksi.projekatop.persistance.DataStorage;
 import tech.goksi.projekatop.persistance.DataStorageInjectable;
 
@@ -14,12 +14,12 @@ public class ControllerFactory {
     private ControllerFactory() {
     }
 
-    public static <T> T controllerForClass(Class<T> clazz, DataStorage dataStorage, Model model) {
+    public static <T> T controllerForClass(Class<T> clazz, DataStorage dataStorage, Korisnik korisnik) {
         try {
             T controllerInstance = clazz.getConstructor().newInstance();
-            if (model != null && ModelInjectable.class.isAssignableFrom(clazz)) {
-                ModelInjectable modelInjectable = (ModelInjectable) controllerInstance;
-                modelInjectable.setModel(model);
+            if (korisnik != null && KorisnikInjectable.class.isAssignableFrom(clazz)) {
+                KorisnikInjectable korisnikInjectable = (KorisnikInjectable) controllerInstance;
+                korisnikInjectable.setModel(korisnik);
             }
             if (dataStorage != null && DataStorageInjectable.class.isAssignableFrom(clazz)) {
                 DataStorageInjectable dataStorageInjectable = (DataStorageInjectable) controllerInstance;

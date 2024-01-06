@@ -10,15 +10,14 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import tech.goksi.projekatop.TabbyViews;
 import tech.goksi.projekatop.models.Korisnik;
-import tech.goksi.projekatop.models.Model;
-import tech.goksi.projekatop.models.ModelInjectable;
+import tech.goksi.projekatop.models.KorisnikInjectable;
 import tech.goksi.projekatop.paginating.PageNavigator;
 import tech.goksi.projekatop.persistance.DataStorage;
 import tech.goksi.projekatop.persistance.DataStorageInjectable;
 import tech.goksi.projekatop.utils.ControllerFactory;
 import tech.goksi.projekatop.utils.ViewLoader;
 
-public class MainController implements DataStorageInjectable, ModelInjectable {
+public class MainController implements DataStorageInjectable, KorisnikInjectable {
     private PageNavigator pageNavigator;
     @FXML
     private MenuBar menuBar;
@@ -35,7 +34,7 @@ public class MainController implements DataStorageInjectable, ModelInjectable {
         if (!currentUser.isAdmin()) adminMenu.setVisible(false);
         MenuItem welcomeBackItem = mojNalogMenu.getItems().get(0);
         welcomeBackItem.setText(String.format(welcomeBackItem.getText(), currentUser.getUsername()));
-        pageNavigator = new PageNavigator(contentScene);
+        pageNavigator = new PageNavigator(contentScene, storage, currentUser);
     }
 
     @Override
@@ -44,8 +43,8 @@ public class MainController implements DataStorageInjectable, ModelInjectable {
     }
 
     @Override
-    public void setModel(Model model) {
-        this.currentUser = (Korisnik) model;
+    public void setModel(Korisnik korisnik) {
+        this.currentUser = korisnik;
     }
 
     public void onLogoutClick() {

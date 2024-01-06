@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.text.Font?>
-<AnchorPane prefHeight="548" prefWidth="1002" xmlns="http://javafx.com/javafx/17.0.2-ea"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="tech.goksi.projekatop.controllers.nalog.PodesavanjaController">
-    <Region layoutX="14.0" layoutY="29.0" prefHeight="257.0" prefWidth="251.0"
-            style="-fx-border-color: black; -fx-border-width: 2px;"/>
-    <Label fx:id="infoLabel" layoutX="32.0" layoutY="70.0"
-           text="Username: %s&#10;&#10;Admin: %s&#10;&#10;Broj porudzbina: %d">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="548" prefWidth="1002" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tech.goksi.projekatop.controllers.nalog.PodesavanjaController">
+    <Region layoutX="14.0" layoutY="29.0" prefHeight="312.0" prefWidth="471.0" style="-fx-border-color: black; -fx-border-width: 2px;" />
+    <Label fx:id="infoLabel" layoutX="28.0" layoutY="63.0" text="Username: %s&#10;&#10;Admin: %s&#10;&#10;Datum registracije: %s&#10;&#10;Broj porudzbina: %d">
         <font>
-            <Font size="24.0"/>
+            <Font size="24.0" />
+        </font>
+    </Label>
+    <Label layoutX="636.0" layoutY="39.0" text="Promena lozinke">
+        <font>
+            <Font size="33.0" />
+        </font>
+    </Label>
+    <PasswordField fx:id="passwordField" layoutX="611.0" layoutY="109.0" onKeyPressed="#onFieldWrite" prefHeight="25.0" prefWidth="293.0" promptText="Unesite novu lozinku" />
+    <PasswordField fx:id="repeatedPasswordField" layoutX="611.0" layoutY="161.0" onKeyPressed="#onFieldWrite" prefHeight="25.0" prefWidth="293.0" promptText="Ponovite novu lozinku" />
+    <Button layoutX="700.0" layoutY="231.0" mnemonicParsing="false" onAction="#onPromeniLoznikuClick" prefHeight="43.0" prefWidth="115.0" text="Promeni lozinku" />
+    <Label fx:id="errorLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="611.0" layoutY="194.0" prefHeight="17.0" prefWidth="293.0" textFill="RED">
+        <font>
+            <Font size="18.0" />
         </font>
     </Label>
 </AnchorPane>

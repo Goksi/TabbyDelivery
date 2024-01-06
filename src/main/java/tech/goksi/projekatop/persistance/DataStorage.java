@@ -12,4 +12,6 @@ public interface DataStorage {
 
 
     CompletableFuture<Void> addUser(String username, String password, boolean admin);
+
+    CompletableFuture<Korisnik> changePassword(Korisnik korisnik, String password);
 }

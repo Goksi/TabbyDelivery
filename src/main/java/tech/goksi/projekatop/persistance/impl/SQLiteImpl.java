@@ -98,4 +98,19 @@ public class SQLiteImpl implements DataStorage {
             }, username, EncryptionUtils.createHash(password), Date.from(Instant.now()), admin);
         });
     }
+
+    @Override
+    public CompletableFuture<Korisnik> changePassword(Korisnik korisnik, String password) {
+        return CompletableFuture.supplyAsync(() -> {
+            connection.withConnection("UPDATE Korisnici SET password = ? WHERE id = ?", preparedStatement -> {
+                try {
+                    preparedStatement.executeUpdate();
+                } catch (SQLException e) {
+                    LOGGER.log(Level.SEVERE, "Greska pri promeni lozinke !", e);
+                }
+            }, EncryptionUtils.createHash(password), korisnik.getId());
+
+            return findUserByUsername(korisnik.getUsername()).join();
+        });
+    }
 }

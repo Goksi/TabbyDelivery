@@ -1,5 +1,6 @@
 package tech.goksi.projekatop.controllers.nalog;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -14,6 +15,8 @@ public class PodesavanjaController implements DataStorageInjectable, KorisnikInj
     private PasswordField passwordField;
     @FXML
     private PasswordField repeatedPasswordField;
+    @FXML
+    private Label successLabel;
     @FXML
     private Label errorLabel;
     @FXML
@@ -50,12 +53,23 @@ public class PodesavanjaController implements DataStorageInjectable, KorisnikInj
             errorLabel.setText("Sifre se ne podudaraju !");
             return;
         }
-        // TODO uspesna promena
+        if (currentUser.tryLogin(password)) {
+            errorLabel.setText("Nova lozinka ne moze biti ista kao stara !");
+            return;
+        }
+        storage.changePassword(currentUser, password)
+                .thenAccept(korisnik -> currentUser = korisnik)
+                .thenRun(() -> Platform.runLater(() -> {
+                    passwordField.setText("");
+                    repeatedPasswordField.setText("");
+                    successLabel.setText("Uspesno promenjena sifra !");
+                }));
     }
 
     public void onFieldWrite(KeyEvent keyEvent) {
         PasswordField passwordField = (PasswordField) keyEvent.getSource();
         passwordField.getStyleClass().remove("error-field");
         errorLabel.setText("");
+        successLabel.setText("");
     }
 }

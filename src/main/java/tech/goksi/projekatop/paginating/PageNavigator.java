@@ -3,8 +3,11 @@ package tech.goksi.projekatop.paginating;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.scene.control.MenuItem;
+import tech.goksi.projekatop.TabbyViews;
 import tech.goksi.projekatop.models.Korisnik;
 import tech.goksi.projekatop.persistance.DataStorage;
+import tech.goksi.projekatop.utils.ControllerFactory;
+import tech.goksi.projekatop.utils.ViewLoader;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +20,7 @@ public class PageNavigator {
     public PageNavigator(SubScene rootScene, DataStorage dataStorage, Korisnik currentUser) {
         this.rootScene = rootScene;
         pages = new HashMap<>();
+        pages.put(Page.PODESAVANJA, ViewLoader.load(TabbyViews.PODESAVANJA, clazz -> ControllerFactory.controllerForClass(clazz, dataStorage, currentUser)));
     }
 
     public void goToPage(MenuItem item) {

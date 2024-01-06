@@ -52,7 +52,7 @@ public class LoginController implements DataStorageInjectable {
                         return;
                     }
                     /*TODO: bilo koji drugi slucaj, uspesan login, ne svidja mi se ovako*/
-                    Parent mainWindow = ViewLoader.load(TabbyViews.MAIN.toString(),
+                    Parent mainWindow = ViewLoader.load(TabbyViews.MAIN,
                             clazz -> ControllerFactory.controllerForClass(clazz, storage, korisnik));
                     Stage mainStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                     Platform.runLater(() -> mainStage.setScene(new Scene(mainWindow)));

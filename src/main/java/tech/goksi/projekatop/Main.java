@@ -16,9 +16,9 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         DataStorage storage = new SQLiteImpl();
-        Parent login = ViewLoader.load(TabbyViews.LOGIN.toString(),
+        Parent login = ViewLoader.load(TabbyViews.LOGIN,
                 clazz -> ControllerFactory.controllerForClass(clazz, storage, null));
-        Parent register = ViewLoader.load(TabbyViews.REGISTER.toString(),
+        Parent register = ViewLoader.load(TabbyViews.REGISTER,
                 clazz -> ControllerFactory.controllerForClass(clazz, storage, null));
         stage.setScene(new Scene(new StackPane(register, login)));
         stage.setResizable(false);

@@ -53,9 +53,9 @@ public class MainController implements DataStorageInjectable, KorisnikInjectable
         confirmation.setTitle("Logout");
         confirmation.showAndWait();
         if (confirmation.getResult() == ButtonType.NO) return;
-        Parent login = ViewLoader.load(TabbyViews.LOGIN.toString(),
+        Parent login = ViewLoader.load(TabbyViews.LOGIN,
                 clazz -> ControllerFactory.controllerForClass(clazz, storage, null));
-        Parent register = ViewLoader.load(TabbyViews.REGISTER.toString(),
+        Parent register = ViewLoader.load(TabbyViews.REGISTER,
                 clazz -> ControllerFactory.controllerForClass(clazz, storage, null));
         Stage mainStage = (Stage) menuBar.getScene().getWindow();
         mainStage.setScene(new Scene(new StackPane(register, login)));

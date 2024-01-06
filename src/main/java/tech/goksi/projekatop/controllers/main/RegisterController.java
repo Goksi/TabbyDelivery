@@ -33,23 +33,22 @@ public class RegisterController implements DataStorageInjectable {
 
     public void onRegisterClick() {
         String username = usernameField.getText();
-        String errorBorderStyle = "-fx-border-color: rgba(255, 0, 0, 0.2); -fx-border-width: 2px;";
         if (username.length() < 5) {
-            usernameField.setStyle(errorBorderStyle);
+            usernameField.getStyleClass().add("error-field");
             errorLabel.setText("Username mora da ima najmanje 5 karaktera !");
             return;
         }
         String password = passwordField.getText();
         String repeatedPassword = repeatedPasswordField.getText();
-        if (!password.equals(repeatedPassword)) {
-            passwordField.setStyle(errorBorderStyle);
-            repeatedPasswordField.setStyle(errorBorderStyle);
-            errorLabel.setText("Sifre se ne podudaraju !");
+        if (password.length() < 8) {
+            passwordField.getStyleClass().add("error-field");
+            errorLabel.setText("Password mora da ima najmanje 8 karaktera !");
             return;
         }
-        if (password.length() < 8) {
-            passwordField.setStyle(errorBorderStyle);
-            errorLabel.setText("Password mora da ima najmanje 8 karaktera !");
+        if (!password.equals(repeatedPassword)) {
+            passwordField.getStyleClass().add("error-field");
+            repeatedPasswordField.getStyleClass().add("error-field");
+            errorLabel.setText("Sifre se ne podudaraju !");
             return;
         }
         storage.addUser(username, password, false)
@@ -78,7 +77,7 @@ public class RegisterController implements DataStorageInjectable {
 
     public void onFieldWrite(KeyEvent keyEvent) {
         TextField sourceField = (TextField) keyEvent.getSource();
-        sourceField.setStyle(null);
+        sourceField.getStyleClass().remove("error-field");
         errorLabel.setText("");
         successLabel.setText("");
     }

@@ -32,15 +32,14 @@ public class LoginController implements DataStorageInjectable {
 
     public void onLoginClick(ActionEvent actionEvent) {
         String username = usernameField.getText();
-        String errorBorderStyle = "-fx-border-color: rgba(255, 0, 0, 0.2); -fx-border-width: 2px;";
         if (username.length() < 5) {
-            usernameField.setStyle(errorBorderStyle);
+            usernameField.getStyleClass().add("error-field");
             errorLabel.setText("Username mora da ima najmanje 5 karaktera !");
             return;
         }
         String password = passwordField.getText();
         if (password.length() < 8) {
-            passwordField.setStyle(errorBorderStyle);
+            passwordField.getStyleClass().add("error-field");
             errorLabel.setText("Password mora da ima najmanje 8 karaktera !");
             return;
         }
@@ -64,7 +63,7 @@ public class LoginController implements DataStorageInjectable {
     /*Ovde cemo resetovati greske*/
     public void onFieldWrite(KeyEvent keyEvent) {
         TextField sourceField = (TextField) keyEvent.getSource();
-        sourceField.setStyle(null);
+        sourceField.getStyleClass().remove("error-field");
         errorLabel.setText("");
     }
 

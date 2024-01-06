@@ -1,0 +1,4 @@
+.error-field {
+    -fx-border-color: rgba(255, 0, 0, 0.2);
+    -fx-border-width: 2px;
+}

@@ -4,7 +4,8 @@ public enum TabbyViews {
     MAIN("/views/main-view.fxml"),
     LOGIN("/views/login-view.fxml"),
     REGISTER("/views/register-view.fxml"),
-    PODESAVANJA("/views/nalog/podesavanja-view.fxml");
+    PODESAVANJA("/views/nalog/podesavanja-view.fxml"),
+    KORISNICI("/views/admin/korisnici-view.fxml");
 
     private final String path;
 

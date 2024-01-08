@@ -50,7 +50,6 @@ public class LoginController implements DataStorageInjectable {
                         Platform.runLater(() -> errorLabel.setText("Pogresan username ili sifra !"));
                         return;
                     }
-                    /*TODO: bilo koji drugi slucaj, uspesan login, ne svidja mi se ovako*/
                     Parent mainWindow = ViewLoader.load(TabbyViews.MAIN,
                             clazz -> ControllerFactory.controllerForClass(clazz, storage, korisnik));
                     Stage mainStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();

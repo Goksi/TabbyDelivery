@@ -12,6 +12,7 @@ import tech.goksi.projekatop.utils.ViewLoader;
 import java.util.HashMap;
 import java.util.Map;
 
+/*TODO: change impl to use suppliers*/
 public class PageNavigator {
     private final SubScene rootScene;
     private final Map<Page, Parent> pages;
@@ -21,6 +22,7 @@ public class PageNavigator {
         this.rootScene = rootScene;
         pages = new HashMap<>();
         pages.put(Page.PODESAVANJA, ViewLoader.load(TabbyViews.PODESAVANJA, clazz -> ControllerFactory.controllerForClass(clazz, dataStorage, currentUser)));
+        pages.put(Page.KORISNICI, ViewLoader.load(TabbyViews.KORISNICI, clazz -> ControllerFactory.controllerForClass(clazz, dataStorage, null)));
     }
 
     public void goToPage(MenuItem item) {

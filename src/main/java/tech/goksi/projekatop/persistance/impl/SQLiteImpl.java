@@ -114,4 +114,17 @@ public class SQLiteImpl implements DataStorage {
             return findUserByUsername(korisnik.getUsername());
         }).thenCompose(Function.identity());
     }
+
+    @Override
+    public CompletableFuture<Void> removeUser(Korisnik korisnik) {
+        return CompletableFuture.runAsync(() -> {
+            connection.withConnection("DELETE FROM Korisnici WHERE id = ?", preparedStatement -> {
+                try {
+                    preparedStatement.executeUpdate();
+                } catch (SQLException e) {
+                    LOGGER.log(Level.SEVERE, "Greska prilikom brisanja korisnika !", e);
+                }
+            }, korisnik.getId());
+        });
+    }
 }

@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-/*TODO: change impl to use suppliers*/
 public class PageNavigator {
     private final Map<Page, Supplier<Parent>> pages;
     private final Map<Page, Parent> cachedPages;

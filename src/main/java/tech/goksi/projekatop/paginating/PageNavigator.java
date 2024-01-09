@@ -11,26 +11,29 @@ import tech.goksi.projekatop.utils.ViewLoader;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /*TODO: change impl to use suppliers*/
 public class PageNavigator {
+    private final Map<Page, Supplier<Parent>> pages;
+    private final Map<Page, Parent> cachedPages;
     private final SubScene rootScene;
-    private final Map<Page, Parent> pages;
-    private Parent currentPage;
+    private Page currentPage = Page.MOJE_PORUDZBINE;
 
     public PageNavigator(SubScene rootScene, DataStorage dataStorage, Korisnik currentUser) {
         this.rootScene = rootScene;
         pages = new HashMap<>();
-        pages.put(Page.PODESAVANJA, ViewLoader.load(TabbyViews.PODESAVANJA, clazz -> ControllerFactory.controllerForClass(clazz, dataStorage, currentUser)));
-        pages.put(Page.KORISNICI, ViewLoader.load(TabbyViews.KORISNICI, clazz -> ControllerFactory.controllerForClass(clazz, dataStorage, null)));
+        cachedPages = new HashMap<>();
+        pages.put(Page.PODESAVANJA, () -> ViewLoader.load(TabbyViews.PODESAVANJA, clazz -> ControllerFactory.controllerForClass(clazz, dataStorage, currentUser)));
+        pages.put(Page.KORISNICI, () -> ViewLoader.load(TabbyViews.KORISNICI, clazz -> ControllerFactory.controllerForClass(clazz, dataStorage, null)));
     }
 
     public void goToPage(MenuItem item) {
         Page page = Page.valueOf(item.getId().toUpperCase());
-        Parent currentParent = pages.get(page);
-        if (currentParent != currentPage) {
-            rootScene.setRoot(currentParent);
-            currentPage = currentParent;
+        if (currentPage != page) {
+            Parent parent = cachedPages.computeIfAbsent(page, k -> pages.get(k).get());
+            rootScene.setRoot(parent);
+            currentPage = page;
         }
     }
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ProgressIndicator?>
@@ -8,12 +9,14 @@
 <AnchorPane prefHeight="548" prefWidth="1002" xmlns="http://javafx.com/javafx/17.0.2-ea"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="tech.goksi.projekatop.controllers.admin.KorisniciController">
-    <ListView fx:id="korisniciListView" layoutX="12.0" layoutY="52.0" prefHeight="481.0" prefWidth="978.0"/>
-    <Label layoutX="347.0" text="Registrovani korisnici">
+    <ListView fx:id="korisniciListView" layoutX="12.0" layoutY="52.0" prefHeight="415.0" prefWidth="978.0"/>
+    <Label layoutX="321.0" layoutY="3.0" text="Registrovani korisnici">
         <font>
             <Font size="33.0"/>
         </font>
     </Label>
     <ProgressIndicator fx:id="loadingSpinner" layoutX="475.0" layoutY="266.0" prefHeight="103.0" prefWidth="134.0"
                        visible="false"/>
+    <Button layoutX="388.0" layoutY="481.0" mnemonicParsing="false" onAction="#onDodajKorisnika" prefHeight="53.0"
+            prefWidth="174.0" text="Dodaj novog korisnika"/>
 </AnchorPane>

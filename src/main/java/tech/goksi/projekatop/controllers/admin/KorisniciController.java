@@ -63,6 +63,9 @@ public class KorisniciController implements DataStorageInjectable {
 
     }
 
+    public void onDodajKorisnika(ActionEvent actionEvent) {
+    }
+
     public void onObrisiKorisnika(ActionEvent event) {
         Korisnik korisnik = korisniciListView.getSelectionModel().getSelectedItem();
         Alert confirmation = new Alert(
@@ -87,8 +90,10 @@ public class KorisniciController implements DataStorageInjectable {
             Platform.runLater(() -> loadingSpinner.setVisible(true));
         }
         storage.getAllUsers()
-                .thenAccept(list -> Platform.runLater(() -> korisniciList.setAll(list)))
-                .thenRun(() -> Platform.runLater(() -> loadingSpinner.setVisible(false)));
+                .thenAccept(list -> Platform.runLater(() -> {
+                    korisniciList.setAll(list);
+                    loadingSpinner.setVisible(false);
+                }));
     }
 
 

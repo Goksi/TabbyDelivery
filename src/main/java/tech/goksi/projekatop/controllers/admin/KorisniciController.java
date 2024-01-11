@@ -5,10 +5,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
+import tech.goksi.projekatop.TabbyViews;
 import tech.goksi.projekatop.models.Korisnik;
 import tech.goksi.projekatop.persistance.DataStorage;
 import tech.goksi.projekatop.persistance.DataStorageInjectable;
+import tech.goksi.projekatop.utils.ControllerFactory;
+import tech.goksi.projekatop.utils.ViewLoader;
 
 public class KorisniciController implements DataStorageInjectable {
 
@@ -59,11 +66,21 @@ public class KorisniciController implements DataStorageInjectable {
         populateListView();
     }
 
-    public void onUrediKorisnika(ActionEvent event) {
-
+    public void onUrediKorisnika(ActionEvent actionEvent) {
+        MenuItem menuItem = (MenuItem) actionEvent.getSource();
+        menuItem.setDisable(true);
+        Korisnik korisnik = korisniciListView.getSelectionModel().getSelectedItem();
+        Stage stage = makeStage(korisnik);
+        stage.showAndWait();
+        menuItem.setDisable(false);
     }
 
     public void onDodajKorisnika(ActionEvent actionEvent) {
+        Button button = (Button) actionEvent.getSource();
+        button.setDisable(true);
+        Stage stage = makeStage(null);
+        stage.showAndWait();
+        button.setDisable(false);
     }
 
     public void onObrisiKorisnika(ActionEvent event) {
@@ -81,6 +98,19 @@ public class KorisniciController implements DataStorageInjectable {
             storage.removeUser(korisnik)
                     .thenRun(this::populateListView);
         }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private Stage makeStage(Korisnik korisnik) {
+        Stage stage = new Stage();
+        if (korisnik == null) {
+            stage.setTitle("TabbyDelivery | Dodaj korisnika");
+        } else stage.setTitle("TabbyDelivery | Uredi korisnika");
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
+        stage.setResizable(false);
+        Parent parent = ViewLoader.load(TabbyViews.MODIFY_KORISNIK, clazz -> ControllerFactory.controllerForClass(clazz, storage, korisnik));
+        stage.setScene(new Scene(parent));
+        return stage;
     }
 
     private void populateListView() {

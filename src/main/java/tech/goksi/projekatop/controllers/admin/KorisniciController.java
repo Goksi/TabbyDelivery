@@ -110,6 +110,7 @@ public class KorisniciController implements DataStorageInjectable {
         stage.setResizable(false);
         Parent parent = ViewLoader.load(TabbyViews.MODIFY_KORISNIK, clazz -> ControllerFactory.controllerForClass(clazz, storage, korisnik));
         stage.setScene(new Scene(parent));
+        stage.setOnHiding(event -> populateListView());
         return stage;
     }
 

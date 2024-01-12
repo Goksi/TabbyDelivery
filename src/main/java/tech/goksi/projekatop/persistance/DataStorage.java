@@ -3,6 +3,7 @@ package tech.goksi.projekatop.persistance;
 import tech.goksi.projekatop.models.Korisnik;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public interface DataStorage {
@@ -16,4 +17,6 @@ public interface DataStorage {
     CompletableFuture<Korisnik> changePassword(Korisnik korisnik, String password);
 
     CompletableFuture<Void> removeUser(Korisnik korisnik);
+
+    CompletableFuture<Void> modifyUser(Korisnik korisnik, Map<String, Object> fields);
 }

@@ -10,9 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -125,6 +123,31 @@ public class SQLiteImpl implements DataStorage {
                     LOGGER.log(Level.SEVERE, "Greska prilikom brisanja korisnika !", e);
                 }
             }, korisnik.getId());
+        });
+    }
+
+    @Override
+    public CompletableFuture<Void> modifyUser(Korisnik korisnik, Map<String, Object> fields) {
+        if (fields.isEmpty()) throw new IllegalArgumentException("Makar jedna stvar mora biti promenjena !");
+        String template = "UPDATE Korisnici SET %s WHERE id = ?";
+        StringJoiner updateBuilder = new StringJoiner(",");
+        for (String key : fields.keySet()) {
+            updateBuilder.add(key + "=?");
+        }
+        String query = String.format(template, updateBuilder);
+        return CompletableFuture.runAsync(() -> {
+            String username = (String) fields.get("username");
+            if (username != null) {
+                Korisnik drugi = findUserByUsername(username).join();
+                if (drugi != null) throw new KorisnikExistException(drugi.getUsername());
+            }
+            connection.withConnection(query, preparedStatement -> {
+                try {
+                    preparedStatement.executeUpdate();
+                } catch (SQLException e) {
+                    LOGGER.log(Level.SEVERE, "Greska prilikom uredjivanja korisnika !", e);
+                }
+            }, fields.values(), korisnik.getId());
         });
     }
 }

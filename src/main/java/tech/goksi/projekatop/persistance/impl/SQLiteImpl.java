@@ -33,6 +33,24 @@ public class SQLiteImpl implements DataStorage {
                     "admin" NOT NULL CHECK ("admin" IN (0, 1))
                     )
                     """);
+            statement.addBatch("""
+                    CREATE TABLE IF NOT EXISTS Restorani(
+                    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\s
+                    naziv VARCHAR(48) NOT NULL UNIQUE, \s
+                    adresa VARCHAR(48) NOT NULL, \s
+                    logo BLOB
+                    )
+                    """);
+            statement.addBatch("""
+                    CREATE TABLE IF NOT EXISTS Jela(
+                    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \s
+                    naziv VARCHAR(48) NOT NULL, \s
+                    cena INTEGER NUT NULL CHECK (cena > 0), \s
+                    image BLOB, \s
+                    restoran INTEGER NOT NULL, \s
+                    FOREIGN KEY(restoran) REFERENCES Restorani(id)
+                    )
+                    """);
             statement.executeBatch();
             statement.close();
         } catch (SQLException e) {

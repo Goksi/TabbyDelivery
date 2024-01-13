@@ -134,6 +134,8 @@ public class SQLiteImpl implements DataStorage {
         for (String key : fields.keySet()) {
             updateBuilder.add(key + "=?");
         }
+        Object[] params = Arrays.copyOf(fields.values().toArray(), fields.size() + 1);
+        params[fields.size()] = korisnik.getId();
         String query = String.format(template, updateBuilder);
         return CompletableFuture.runAsync(() -> {
             String username = (String) fields.get("username");
@@ -147,7 +149,7 @@ public class SQLiteImpl implements DataStorage {
                 } catch (SQLException e) {
                     LOGGER.log(Level.SEVERE, "Greska prilikom uredjivanja korisnika !", e);
                 }
-            }, fields.values(), korisnik.getId());
+            }, params);
         });
     }
 }

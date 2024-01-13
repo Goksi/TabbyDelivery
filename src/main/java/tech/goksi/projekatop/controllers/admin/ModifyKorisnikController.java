@@ -10,7 +10,10 @@ import tech.goksi.projekatop.models.Korisnik;
 import tech.goksi.projekatop.models.KorisnikInjectable;
 import tech.goksi.projekatop.persistance.DataStorage;
 import tech.goksi.projekatop.persistance.DataStorageInjectable;
+import tech.goksi.projekatop.utils.EncryptionUtils;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -70,7 +73,38 @@ public class ModifyKorisnikController implements DataStorageInjectable, Korisnik
     }
 
     private void onUrediKorisnika() {
+        Map<String, Object> changedFields = new HashMap<>();
+        String username = usernameField.getText();
+        if (!username.equals(korisnik.getUsername())) {
+            if (username.length() < 5) {
+                usernameField.getStyleClass().add("error-field");
+                errorLabel.setText("Username mora da ima 5 karaktera !");
+                return;
+            } else changedFields.put("username", username);
+        }
+        String password = passwordField.getText();
+        if (!password.isEmpty()) {
+            if (password.length() < 8) {
+                passwordField.getStyleClass().add("error-field");
+                errorLabel.setText("Password mora da ima 8 karaktera !");
+                return;
+            } else changedFields.put("password", EncryptionUtils.createHash(password));
+        }
+        if (korisnik.isAdmin() != adminCheckbox.isSelected())
+            changedFields.put("admin", adminCheckbox.isSelected());
 
+        storage.modifyUser(korisnik, changedFields)
+                .whenComplete(((unused, throwable) -> {
+                    if (throwable != null) {
+                        if (throwable.getCause() instanceof KorisnikExistException) {
+                            Platform.runLater(() -> {
+                                errorLabel.setText("Korisnik sa tim imenom vec postoji !");
+                                usernameField.getStyleClass().add("error-field");
+                            });
+                        } else LOGGER.log(Level.SEVERE, "Greska pri modifikovanju korisnika !", throwable);
+                    } else
+                        Platform.runLater(() -> successLabel.setText("Uspesno ste uredili korisnika " + korisnik.getUsername() + " !"));
+                }));
     }
 
     public void onButtonAction() {

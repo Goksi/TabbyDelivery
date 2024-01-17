@@ -1,11 +1,15 @@
 package tech.goksi.projekatop.persistance.impl;
 
+import javafx.scene.image.Image;
 import tech.goksi.projekatop.exceptions.KorisnikExistException;
+import tech.goksi.projekatop.models.Jelo;
 import tech.goksi.projekatop.models.Korisnik;
+import tech.goksi.projekatop.models.Restoran;
 import tech.goksi.projekatop.persistance.ConnectionWrapper;
 import tech.goksi.projekatop.persistance.DataStorage;
 import tech.goksi.projekatop.utils.EncryptionUtils;
 
+import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -169,5 +173,64 @@ public class SQLiteImpl implements DataStorage {
                 }
             }, params);
         });
+    }
+
+    @Override
+    public CompletableFuture<List<Restoran>> getAllRestorans() {
+        return CompletableFuture.supplyAsync(() -> {
+            List<Restoran> restorani = new ArrayList<>();
+            connection.withConnection("SELECT * FROM Restorani", restoranStatement -> {
+                try {
+                    ResultSet restoranResultSet = restoranStatement.executeQuery();
+                    while (restoranResultSet.next()) {
+                        int id = restoranResultSet.getInt("id");
+                        String naziv = restoranResultSet.getString("naziv");
+                        String adresa = restoranResultSet.getString("adresa");
+                        InputStream logoStream = restoranResultSet.getBinaryStream("logo");
+                        Image logo = logoStream != null ? new Image(logoStream) : null;
+                        List<Jelo> jela = new ArrayList<>();
+                        connection.withConnection("SELECT * FROM Jela WHERE restoran = ?", jeloStatement -> {
+                            try {
+                                ResultSet jeloResultSet = jeloStatement.executeQuery();
+                                while (jeloResultSet.next()) {
+                                    int idJela = jeloResultSet.getInt("id");
+                                    String jeloNaziv = jeloResultSet.getString("naziv");
+                                    int jeloCena = jeloResultSet.getInt("cena");
+                                    InputStream jeloStream = jeloResultSet.getBinaryStream("image");
+                                    Image slika = jeloStream != null ? new Image(jeloStream) : null;
+                                    jela.add(new Jelo(idJela, jeloNaziv, slika, jeloCena));
+                                }
+                            } catch (SQLException e) {
+                                LOGGER.log(Level.SEVERE, "Greska pri preuzimanju jela iz baze !", e);
+                            }
+                        }, id);
+
+                        restorani.add(new Restoran(id, naziv, adresa, logo, jela));
+                    }
+                } catch (SQLException e) {
+                    LOGGER.log(Level.SEVERE, "Greska pri preuzimanju restorana iz baze !", e);
+                }
+            });
+            return restorani;
+        });
+    }
+
+    /*TODO: inputstream*/
+    @Override
+    public CompletableFuture<Void> addRestoran(String naziv, String adresa, InputStream slika) {
+        return CompletableFuture.runAsync(() -> {
+            connection.withConnection("INSERT INTO Restorani(naziv, adresa, logo) VALUES (?, ?, ?)", preparedStatement -> {
+                try {
+                    preparedStatement.executeUpdate();
+                } catch (SQLException e) {
+                    LOGGER.log(Level.SEVERE, "Greska pri ubacivanju restorana u bazu !", e);
+                }
+            }, naziv, adresa, slika);
+        });
+    }
+
+    @Override
+    public CompletableFuture<Void> addJeloToRestoran(Restoran restoran, String naziv, InputStream slika, int cena) {
+        return null;
     }
 }

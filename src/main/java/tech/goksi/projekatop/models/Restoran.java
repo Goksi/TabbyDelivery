@@ -11,7 +11,7 @@ public class Restoran extends Model {
     private final Image logo;
     private final List<Jelo> jela;
 
-    protected Restoran(int id, String naziv, String adresa, Image logo, List<Jelo> jela) {
+    public Restoran(int id, String naziv, String adresa, Image logo, List<Jelo> jela) {
         super(id);
         this.naziv = naziv;
         this.adresa = adresa;

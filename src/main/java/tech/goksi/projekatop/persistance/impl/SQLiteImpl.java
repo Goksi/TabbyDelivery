@@ -20,6 +20,7 @@ import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/*TODO: update query different method*/
 public class SQLiteImpl implements DataStorage {
     private static final Logger LOGGER = Logger.getLogger(SQLiteImpl.class.getName());
     private final ConnectionWrapper connection;
@@ -231,6 +232,15 @@ public class SQLiteImpl implements DataStorage {
 
     @Override
     public CompletableFuture<Void> addJeloToRestoran(Restoran restoran, String naziv, InputStream slika, int cena) {
-        return null;
+        return CompletableFuture.runAsync(() -> {
+            connection.withConnection("INSERT INTO Jela(naziv, cena, image, restoran) VALUES (?, ?, ?, ?)", preparedStatement -> {
+                try {
+                    preparedStatement.executeUpdate();
+                } catch (SQLException e) {
+                    LOGGER.log(Level.SEVERE, "Greska pri dodavanju jela u restoran !", e);
+                }
+            }, naziv, cena, slika, restoran.getId());
+        });
     }
+
 }

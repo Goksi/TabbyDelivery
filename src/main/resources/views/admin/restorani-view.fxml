@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Region?>
+<AnchorPane prefHeight="548" prefWidth="1002" xmlns="http://javafx.com/javafx/17.0.2-ea"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tech.goksi.projekatop.controllers.admin.RestoraniController">
+    <ListView fx:id="restoraniListView" layoutX="14.0" layoutY="14.0" prefHeight="518.0" prefWidth="371.0"/>
+    <Region layoutX="618.0" layoutY="14.0" prefHeight="518.0" prefWidth="371.0"
+            style="-fx-border-color: black; -fx-border-width: 2;"/>
+    <ImageView fx:id="logoView" fitHeight="213.0" fitWidth="356.0" layoutX="626.0" layoutY="20.0" pickOnBounds="true"
+               preserveRatio="true"/>
+</AnchorPane>

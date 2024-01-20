@@ -9,6 +9,8 @@ import tech.goksi.projekatop.persistance.ConnectionWrapper;
 import tech.goksi.projekatop.persistance.DataStorage;
 import tech.goksi.projekatop.utils.EncryptionUtils;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -187,8 +189,8 @@ public class SQLiteImpl implements DataStorage {
                         int id = restoranResultSet.getInt("id");
                         String naziv = restoranResultSet.getString("naziv");
                         String adresa = restoranResultSet.getString("adresa");
-                        InputStream logoStream = restoranResultSet.getBinaryStream("logo");
-                        Image logo = logoStream != null ? new Image(logoStream) : null;
+                        byte[] logoBytes = restoranResultSet.getBytes("logo");
+                        Image logo = logoBytes != null ? new Image(new ByteArrayInputStream(logoBytes)) : null;
                         List<Jelo> jela = new ArrayList<>();
                         connection.withConnection("SELECT * FROM Jela WHERE restoran = ?", jeloStatement -> {
                             try {
@@ -197,8 +199,8 @@ public class SQLiteImpl implements DataStorage {
                                     int idJela = jeloResultSet.getInt("id");
                                     String jeloNaziv = jeloResultSet.getString("naziv");
                                     int jeloCena = jeloResultSet.getInt("cena");
-                                    InputStream jeloStream = jeloResultSet.getBinaryStream("image");
-                                    Image slika = jeloStream != null ? new Image(jeloStream) : null;
+                                    byte[] jeloBytes = jeloResultSet.getBytes("image");
+                                    Image slika = jeloBytes != null ? new Image(new ByteArrayInputStream(jeloBytes)) : null;
                                     jela.add(new Jelo(idJela, jeloNaziv, slika, jeloCena));
                                 }
                             } catch (SQLException e) {
@@ -216,7 +218,7 @@ public class SQLiteImpl implements DataStorage {
         });
     }
 
-    /*TODO: inputstream*/
+    /*TODO: isti naziv*/
     @Override
     public CompletableFuture<Void> addRestoran(String naziv, String adresa, InputStream slika) {
         return CompletableFuture.runAsync(() -> {
@@ -227,6 +229,13 @@ public class SQLiteImpl implements DataStorage {
                     LOGGER.log(Level.SEVERE, "Greska pri ubacivanju restorana u bazu !", e);
                 }
             }, naziv, adresa, slika);
+            try {
+                if (slika != null) {
+                    slika.close();
+                }
+            } catch (IOException e) {
+                LOGGER.log(Level.SEVERE, "Greska pri zatvaranju strima !", e);
+            }
         });
     }
 

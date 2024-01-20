@@ -1,5 +1,7 @@
 package tech.goksi.projekatop.persistance;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,11 +36,18 @@ public class ConnectionWrapper {
     public <T> T withConnection(String query, Function<PreparedStatement, T> body, Object... params) {
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             for (int i = 1; i <= params.length; i++) {
-                statement.setObject(i, params[i - 1]);
+                Object object = params[i - 1];
+                if (object instanceof InputStream stream) {
+                    statement.setBytes(i, stream.readAllBytes());
+                } else statement.setObject(i, object);
+
             }
             return body.apply(statement);
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Greska u komunikaciji sa bazom podataka !", e);
+            return null;
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Greska pri citanju stream-a !", e);
             return null;
         }
     }

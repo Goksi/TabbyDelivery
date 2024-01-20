@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.*?>
+<AnchorPane prefHeight="419.0" prefWidth="425.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tech.goksi.projekatop.controllers.admin.DodajRestoranController">
+    <Label layoutX="14.0" layoutY="34.0" text="Naziv:">
+        <font>
+            <Font size="28.0"/>
+        </font>
+    </Label>
+    <Label layoutX="14.0" layoutY="134.0" text="Adresa:">
+        <font>
+            <Font size="28.0"/>
+        </font>
+    </Label>
+    <Label layoutX="17.0" layoutY="234.0" text="Logo:">
+        <font>
+            <Font size="28.0"/>
+        </font>
+    </Label>
+    <TextField fx:id="nazivField" layoutX="106.0" layoutY="42.0" onKeyTyped="#onFieldWrite"/>
+    <TextField fx:id="adresaField" layoutX="115.0" layoutY="142.0" onKeyTyped="#onFieldWrite"/>
+    <Button layoutX="115.0" layoutY="234.0" mnemonicParsing="false" onAction="#onPretraziLogo" prefHeight="40.0"
+            prefWidth="92.0" text="Pretrazi logo"/>
+    <Label fx:id="imageLabel" alignment="CENTER" layoutX="17.0" layoutY="274.0" prefHeight="40.0" prefWidth="347.0"
+           wrapText="true"/>
+    <Button layoutX="148.0" layoutY="314.0" mnemonicParsing="false" onAction="#onDodaj" prefHeight="48.0"
+            prefWidth="118.0" text="Dodaj"/>
+    <Label fx:id="closeLogoLabel" alignment="CENTER" layoutX="364.0" layoutY="274.0" onMouseClicked="#onLogoClose"
+           prefHeight="40.0" prefWidth="32.0" text="×" visible="false">
+        <font>
+            <Font size="26.0"/>
+        </font>
+        <cursor>
+            <Cursor fx:constant="HAND"/>
+        </cursor>
+    </Label>
+    <Label fx:id="errorLabel" alignment="CENTER" layoutX="4.0" layoutY="388.0" prefHeight="17.0" prefWidth="412.0"
+           textFill="RED">
+        <font>
+            <Font size="18.0"/>
+        </font>
+    </Label>
+    <Label fx:id="successLabel" alignment="CENTER" layoutX="4.0" layoutY="388.0" prefHeight="17.0" prefWidth="412.0"
+           textFill="GREEN">
+        <font>
+            <Font size="18.0"/>
+        </font>
+    </Label>
+</AnchorPane>

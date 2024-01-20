@@ -6,8 +6,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
+import javafx.scene.text.Font;
 
-/*TODO: veci font*/
 public final class ImageUtils {
     private ImageUtils() {
     }
@@ -18,6 +18,8 @@ public final class ImageUtils {
         label.setMaxSize(width, height);
         label.setPrefSize(width, height);
         label.setAlignment(Pos.CENTER);
+        label.setWrapText(true);
+        label.setFont(new Font("Arial", 40));
         WritableImage image = new WritableImage(width, height);
         Scene scene = new Scene(new Group(label));
         scene.snapshot(image);

@@ -8,10 +8,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
@@ -64,7 +61,18 @@ public class RestoraniController implements DataStorageInjectable {
         restoraniListView.getSelectionModel().selectedItemProperty()
                 .addListener(((observableValue, oldValue, newValue) -> onSelection(newValue)));
         restoraniListView.setItems(restorani);
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem obrisiRestoran = new MenuItem("Obrisi restoran");
+        obrisiRestoran.addEventHandler(ActionEvent.ACTION, this::onObrisiRestoran);
+        contextMenu.getItems().add(obrisiRestoran);
 
+        restoraniListView.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue == null) {
+                restoraniListView.setContextMenu(null);
+            } else {
+                restoraniListView.setContextMenu(contextMenu);
+            }
+        });
         populateListView();
     }
 
@@ -104,6 +112,23 @@ public class RestoraniController implements DataStorageInjectable {
     }
 
     public void onUrediRestoran(ActionEvent actionEvent) {
+    }
+
+    public void onObrisiRestoran(ActionEvent actionEvent) {
+        Restoran restoran = restoraniListView.getSelectionModel().getSelectedItem();
+        Alert confirmation = new Alert(
+                Alert.AlertType.WARNING,
+                "Da li ste sigurni da zelite da obrisete restoran " + restoran.getNaziv() + "?",
+                ButtonType.YES,
+                ButtonType.NO
+        );
+        confirmation.setHeaderText(null);
+        confirmation.setTitle("Upozorenje");
+        confirmation.showAndWait();
+        if (confirmation.getResult() == ButtonType.YES) {
+            storage.removeRestoran(restoran)
+                    .thenRun(this::populateListView);
+        }
     }
 
     private void populateListView() {

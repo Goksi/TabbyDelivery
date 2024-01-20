@@ -12,6 +12,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
+import tech.goksi.projekatop.exceptions.RestoranExistException;
 import tech.goksi.projekatop.persistance.DataStorage;
 import tech.goksi.projekatop.persistance.DataStorageInjectable;
 
@@ -19,14 +20,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DodajRestoranController implements DataStorageInjectable {
-    private static final FileChooser imageChooser;
+    private static final Logger LOGGER = Logger.getLogger(DodajRestoranController.class.getName());
+    private static final FileChooser IMAGE_CHOOSER;
 
     static {
-        imageChooser = new FileChooser();
-        imageChooser.setTitle("Otvorite logo");
-        imageChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Logo (bmp, gif, jpeg, png)", "*.bmp", "*.gif", "*.jpeg", "*.png"));
+        IMAGE_CHOOSER = new FileChooser();
+        IMAGE_CHOOSER.setTitle("Otvorite logo");
+        IMAGE_CHOOSER.getExtensionFilters().add(new FileChooser.ExtensionFilter("Logo (bmp, gif, jpeg, png)", "*.bmp", "*.gif", "*.jpeg", "*.png"));
     }
 
     @FXML
@@ -65,14 +69,12 @@ public class DodajRestoranController implements DataStorageInjectable {
 
     public void onPretraziLogo(ActionEvent actionEvent) {
         Window parentWindow = ((Button) actionEvent.getSource()).getScene().getWindow();
-        File file = imageChooser.showOpenDialog(parentWindow);
+        File file = IMAGE_CHOOSER.showOpenDialog(parentWindow);
         if (file == null) return;
         logoProperty.setValue(file);
     }
 
-    /*TODO: isti naziv*/
-    @SuppressWarnings("resource")
-    public void onDodaj(ActionEvent actionEvent) {
+    public void onDodaj() {
         String naziv = nazivField.getText();
         if (naziv.length() < 5) {
             nazivField.getStyleClass().add("error-field");
@@ -92,11 +94,15 @@ public class DodajRestoranController implements DataStorageInjectable {
                 logo = new FileInputStream(file);
             }
         } catch (FileNotFoundException e) {
-            errorLabel.setText("Fajl nije pronadjen !");
+            errorLabel.setText("Fajl za logo nije pronadjen !");
         }
         storage.addRestoran(naziv, adresa, logo)
                 .whenComplete(((unused, throwable) -> {
-                    if (throwable == null) {
+                    if (throwable != null) {
+                        if (throwable.getCause() instanceof RestoranExistException) {
+                            Platform.runLater(() -> errorLabel.setText("Restoran sa tim imenom vec postoji ! !"));
+                        } else LOGGER.log(Level.SEVERE, "Greska pri dodavanju restorana ! !", throwable);
+                    } else {
                         Platform.runLater(() -> successLabel.setText("Uspesno ste dodali novi restoran !"));
                     }
                 }));

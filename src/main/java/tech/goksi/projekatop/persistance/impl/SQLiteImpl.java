@@ -2,6 +2,7 @@ package tech.goksi.projekatop.persistance.impl;
 
 import javafx.scene.image.Image;
 import tech.goksi.projekatop.exceptions.KorisnikExistException;
+import tech.goksi.projekatop.exceptions.RestoranExistException;
 import tech.goksi.projekatop.models.Jelo;
 import tech.goksi.projekatop.models.Korisnik;
 import tech.goksi.projekatop.models.Restoran;
@@ -31,6 +32,7 @@ public class SQLiteImpl implements DataStorage {
         try {
             connection = ConnectionWrapper.getConnection("SQLite", "database.db");
             Statement statement = connection.createStatement();
+            statement.addBatch("PRAGMA foreign_keys = ON");
             statement.addBatch("""
                     CREATE TABLE IF NOT EXISTS Korisnici(
                     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\s
@@ -55,7 +57,7 @@ public class SQLiteImpl implements DataStorage {
                     cena INTEGER NUT NULL CHECK (cena > 0), \s
                     image BLOB, \s
                     restoran INTEGER NOT NULL, \s
-                    FOREIGN KEY(restoran) REFERENCES Restorani(id)
+                    FOREIGN KEY(restoran) REFERENCES Restorani(id) ON DELETE CASCADE
                     )
                     """);
             statement.executeBatch();
@@ -218,7 +220,6 @@ public class SQLiteImpl implements DataStorage {
         });
     }
 
-    /*TODO: isti naziv*/
     @Override
     public CompletableFuture<Void> addRestoran(String naziv, String adresa, InputStream slika) {
         return CompletableFuture.runAsync(() -> {
@@ -226,7 +227,11 @@ public class SQLiteImpl implements DataStorage {
                 try {
                     preparedStatement.executeUpdate();
                 } catch (SQLException e) {
-                    LOGGER.log(Level.SEVERE, "Greska pri ubacivanju restorana u bazu !", e);
+                    if (e.getMessage().contains("SQLITE_CONSTRAINT_UNIQUE")) {
+                        throw new RestoranExistException(naziv);
+                    } else {
+                        LOGGER.log(Level.SEVERE, "Greska pri ubacivanju restorana u bazu !", e);
+                    }
                 }
             }, naziv, adresa, slika);
             try {
@@ -236,6 +241,19 @@ public class SQLiteImpl implements DataStorage {
             } catch (IOException e) {
                 LOGGER.log(Level.SEVERE, "Greska pri zatvaranju strima !", e);
             }
+        });
+    }
+
+    @Override
+    public CompletableFuture<Void> removeRestoran(Restoran restoran) {
+        return CompletableFuture.runAsync(() -> {
+            connection.withConnection("DELETE FROM Restorani WHERE id = ?", preparedStatement -> {
+                try {
+                    preparedStatement.executeUpdate();
+                } catch (SQLException e) {
+                    LOGGER.log(Level.SEVERE, "Greska pri brisanju restorana iz baze !", e);
+                }
+            }, restoran.getId());
         });
     }
 

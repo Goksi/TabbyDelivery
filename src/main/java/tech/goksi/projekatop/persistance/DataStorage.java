@@ -25,5 +25,7 @@ public interface DataStorage {
 
     CompletableFuture<Void> addRestoran(String naziv, String adresa, InputStream slika);
 
+    CompletableFuture<Void> removeRestoran(Restoran restoran);
+
     CompletableFuture<Void> addJeloToRestoran(Restoran restoran, String naziv, InputStream slika, int cena);
 }

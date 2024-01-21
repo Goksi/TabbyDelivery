@@ -10,11 +10,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import tech.goksi.projekatop.exceptions.RestoranExistException;
 import tech.goksi.projekatop.persistance.DataStorage;
 import tech.goksi.projekatop.persistance.DataStorageInjectable;
+import tech.goksi.projekatop.utils.ImagePicker;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,19 +25,10 @@ import java.util.logging.Logger;
 
 public class DodajRestoranController implements DataStorageInjectable {
     private static final Logger LOGGER = Logger.getLogger(DodajRestoranController.class.getName());
-    private static final FileChooser IMAGE_CHOOSER;
-
-    static {
-        IMAGE_CHOOSER = new FileChooser();
-        IMAGE_CHOOSER.setTitle("Otvorite logo");
-        IMAGE_CHOOSER.getExtensionFilters().add(new FileChooser.ExtensionFilter("Logo (bmp, gif, jpeg, png)", "*.bmp", "*.gif", "*.jpeg", "*.png"));
-    }
-
     @FXML
     private Label errorLabel;
     @FXML
     private Label successLabel;
-
     @FXML
     private TextField nazivField;
     @FXML
@@ -69,7 +60,7 @@ public class DodajRestoranController implements DataStorageInjectable {
 
     public void onPretraziLogo(ActionEvent actionEvent) {
         Window parentWindow = ((Button) actionEvent.getSource()).getScene().getWindow();
-        File file = IMAGE_CHOOSER.showOpenDialog(parentWindow);
+        File file = ImagePicker.getInstance().open(parentWindow);
         if (file == null) return;
         logoProperty.setValue(file);
     }

@@ -111,7 +111,21 @@ public class RestoraniController implements DataStorageInjectable {
         button.setDisable(false);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public void onUrediRestoran(ActionEvent actionEvent) {
+        Button button = (Button) actionEvent.getSource();
+        button.setDisable(true);
+        Restoran restoran = restoraniListView.getSelectionModel().getSelectedItem();
+        Parent parent = ViewLoader.load(TabbyViews.UREDI_RESTORAN, clazz -> ControllerFactory.controllerForClass(clazz, storage, null));
+        parent.setUserData(restoran);
+        Stage stage = new Stage();
+        stage.setTitle("Uredi restoran | " + restoran.getNaziv());
+        stage.setResizable(false);
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
+        stage.setScene(new Scene(parent));
+        stage.showAndWait();
+        populateListView();
+        button.setDisable(false);
     }
 
     public void onObrisiRestoran(ActionEvent actionEvent) {

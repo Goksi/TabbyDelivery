@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tech.goksi.projekatop.controllers.admin.UrediRestoranController">
+    <ListView fx:id="jelaListView" layoutX="329.0" layoutY="44.0" prefHeight="344.0" prefWidth="257.0"/>
+    <Label layoutX="433.0" layoutY="9.0" text="Jela:">
+        <font>
+            <Font size="26.0"/>
+        </font>
+    </Label>
+    <Label layoutX="63.0" layoutY="9.0" text="Naziv">
+        <font>
+            <Font size="21.0"/>
+        </font>
+    </Label>
+    <TextField fx:id="nazivTextField" layoutX="14.0" layoutY="35.0"/>
+    <Label layoutX="57.0" layoutY="69.0" text="Adresa">
+        <font>
+            <Font size="21.0"/>
+        </font>
+    </Label>
+    <TextField fx:id="adresaTextField" layoutX="14.0" layoutY="100.0"/>
+    <Label layoutX="26.0" layoutY="134.0" text="Trenutni logo">
+        <font>
+            <Font size="21.0"/>
+        </font>
+    </Label>
+    <Button layoutX="215.0" layoutY="348.0" mnemonicParsing="false" onAction="#onSacuvaj" prefHeight="38.0"
+            prefWidth="85.0" text="Sacuvaj"/>
+    <ImageView fx:id="logoView" fitHeight="168.0" fitWidth="227.0" layoutX="8.0" layoutY="164.0"
+               onMouseClicked="#onLogoClick" pickOnBounds="true" preserveRatio="true">
+        <cursor>
+            <Cursor fx:constant="HAND"/>
+        </cursor>
+    </ImageView>
+</AnchorPane>

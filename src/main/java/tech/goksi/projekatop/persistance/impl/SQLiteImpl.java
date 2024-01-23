@@ -156,14 +156,9 @@ public class SQLiteImpl implements DataStorage {
     @Override
     public CompletableFuture<Void> modifyUser(Korisnik korisnik, Map<String, Object> fields) {
         if (fields.isEmpty()) throw new IllegalArgumentException("Makar jedna stvar mora biti promenjena !");
-        String template = "UPDATE Korisnici SET %s WHERE id = ?";
-        StringJoiner updateBuilder = new StringJoiner(",");
-        for (String key : fields.keySet()) {
-            updateBuilder.add(key + "=?");
-        }
         Object[] params = Arrays.copyOf(fields.values().toArray(), fields.size() + 1);
         params[fields.size()] = korisnik.getId();
-        String query = String.format(template, updateBuilder);
+        String query = buildQuery("UPDATE Korisnici SET %s WHERE id = ?", fields);
         return CompletableFuture.runAsync(() -> {
             String username = (String) fields.get("username");
             if (username != null) {
@@ -258,6 +253,25 @@ public class SQLiteImpl implements DataStorage {
     }
 
     @Override
+    public CompletableFuture<Void> modifyRestoran(Restoran restoran, Map<String, Object> fields) {
+        if (fields.isEmpty()) throw new IllegalArgumentException("Makar jedna stvar mora biti promenjena !");
+        Object[] params = Arrays.copyOf(fields.values().toArray(), fields.size() + 1);
+        params[fields.size()] = restoran.getId();
+        String query = buildQuery("UPDATE Restorani SET %s WHERE id = ?", fields);
+        return CompletableFuture.runAsync(() -> {
+            connection.withConnection(query, preparedStatement -> {
+                try {
+                    preparedStatement.executeUpdate();
+                } catch (SQLException e) {
+                    if (e.getMessage().contains("SQLITE_CONSTRAINT_UNIQUE")) {
+                        throw new RestoranExistException((String) fields.get("naziv"));
+                    } else LOGGER.log(Level.SEVERE, "Greska pri modifikovanju restorana !", e);
+                }
+            }, params);
+        });
+    }
+
+    @Override
     public CompletableFuture<Void> addJeloToRestoran(Restoran restoran, String naziv, InputStream slika, int cena) {
         return CompletableFuture.runAsync(() -> {
             connection.withConnection("INSERT INTO Jela(naziv, cena, image, restoran) VALUES (?, ?, ?, ?)", preparedStatement -> {
@@ -268,6 +282,14 @@ public class SQLiteImpl implements DataStorage {
                 }
             }, naziv, cena, slika, restoran.getId());
         });
+    }
+
+    private String buildQuery(String template, Map<String, Object> fields) {
+        StringJoiner updateBuilder = new StringJoiner(",");
+        for (String key : fields.keySet()) {
+            updateBuilder.add(key + "=?");
+        }
+        return String.format(template, updateBuilder);
     }
 
 }

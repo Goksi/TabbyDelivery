@@ -9,7 +9,8 @@ public enum TabbyViews {
     MODIFY_KORISNIK("/views/admin/modify-korisnik-view.fxml"),
     RESTORANI("/views/admin/restorani-view.fxml"),
     DODAJ_RESTORAN("/views/admin/dodaj-restoran-view.fxml"),
-    UREDI_RESTORAN("/views/admin/uredi-restoran-view.fxml");
+    UREDI_RESTORAN("/views/admin/uredi-restoran-view.fxml"),
+    DODAJ_JELO("/views/admin/dodaj-jelo-view.fxml");
 
     private final String path;
 

@@ -80,13 +80,26 @@ public class UrediRestoranController implements DataStorageInjectable {
                 restoranProperty.set((Restoran) newValue.getRoot().getUserData());
             }
         });
-        ContextMenu contextMenu = new ContextMenu();
+        ContextMenu logoContextMenu = new ContextMenu();
         MenuItem obrisiLogo = new MenuItem("Obrisi logo");
         obrisiLogo.addEventHandler(ActionEvent.ACTION, this::onDeleteLogo);
-        contextMenu.getItems().add(obrisiLogo);
+        logoContextMenu.getItems().add(obrisiLogo);
 
         logoView.setOnContextMenuRequested(contextMenuEvent -> {
-            contextMenu.show(logoView, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
+            logoContextMenu.show(logoView, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
+        });
+
+        ContextMenu jelaContextMenu = new ContextMenu();
+        MenuItem dodajJelo = new MenuItem("Dodaj jelo");
+        dodajJelo.addEventHandler(ActionEvent.ACTION, this::onDodajJelo);
+        MenuItem obrisiJelo = new MenuItem("Obrisi jelo");
+        obrisiJelo.addEventHandler(ActionEvent.ACTION, this::onObrisiJelo);
+        obrisiJelo.setDisable(true);
+        jelaContextMenu.getItems().add(dodajJelo);
+        jelaContextMenu.getItems().add(obrisiJelo);
+        jelaListView.setContextMenu(jelaContextMenu);
+        jelaListView.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
+            obrisiJelo.setDisable(newValue == null);
         });
     }
 
@@ -95,7 +108,7 @@ public class UrediRestoranController implements DataStorageInjectable {
         this.storage = storage;
     }
 
-    public void onSacuvaj(ActionEvent actionEvent) {
+    public void onSacuvaj() {
         Map<String, Object> fields = new HashMap<>();
         String naziv = nazivTextField.getText();
         if (naziv.length() < 5) {
@@ -149,6 +162,26 @@ public class UrediRestoranController implements DataStorageInjectable {
             newLogo = file;
             logoView.setImage(new Image("file:///" + newLogo.getAbsolutePath()));
             logoChanged = true;
+        }
+    }
+
+    public void onDodajJelo(ActionEvent actionEvent) {
+
+    }
+
+    public void onObrisiJelo(ActionEvent actionEvent) {
+        Jelo jelo = jelaListView.getSelectionModel().getSelectedItem();
+        Alert confirmation = new Alert(
+                Alert.AlertType.WARNING,
+                "Da li ste sigurni da zelite da obrisete jelo " + jelo.getNaziv() + "?",
+                ButtonType.YES,
+                ButtonType.NO
+        );
+        confirmation.setHeaderText(null);
+        confirmation.setTitle("Upozorenje");
+        confirmation.showAndWait();
+        if (confirmation.getResult() == ButtonType.YES) {
+            storage.obrisiJelo(jelo);
         }
     }
 

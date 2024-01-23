@@ -3,15 +3,15 @@ package tech.goksi.projekatop.models;
 import javafx.scene.image.Image;
 
 import java.util.Collections;
-import java.util.List;
+import java.util.Set;
 
 public class Restoran extends Model {
     private final String naziv;
     private final String adresa;
     private final Image logo;
-    private final List<Jelo> jela;
+    private final Set<Jelo> jela;
 
-    public Restoran(int id, String naziv, String adresa, Image logo, List<Jelo> jela) {
+    public Restoran(int id, String naziv, String adresa, Image logo, Set<Jelo> jela) {
         super(id);
         this.naziv = naziv;
         this.adresa = adresa;
@@ -31,7 +31,7 @@ public class Restoran extends Model {
         return logo;
     }
 
-    public List<Jelo> getJela() {
-        return Collections.unmodifiableList(jela);
+    public Set<Jelo> getJela() {
+        return Collections.unmodifiableSet(jela);
     }
 }

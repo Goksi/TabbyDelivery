@@ -188,7 +188,7 @@ public class SQLiteImpl implements DataStorage {
                         String adresa = restoranResultSet.getString("adresa");
                         byte[] logoBytes = restoranResultSet.getBytes("logo");
                         Image logo = logoBytes != null ? new Image(new ByteArrayInputStream(logoBytes)) : null;
-                        List<Jelo> jela = new ArrayList<>();
+                        Set<Jelo> jela = new HashSet<>();
                         connection.withConnection("SELECT * FROM Jela WHERE restoran = ?", jeloStatement -> {
                             try {
                                 ResultSet jeloResultSet = jeloStatement.executeQuery();
@@ -281,6 +281,19 @@ public class SQLiteImpl implements DataStorage {
                     LOGGER.log(Level.SEVERE, "Greska pri dodavanju jela u restoran !", e);
                 }
             }, naziv, cena, slika, restoran.getId());
+        });
+    }
+
+    @Override
+    public CompletableFuture<Void> obrisiJelo(Jelo jelo) {
+        return CompletableFuture.runAsync(() -> {
+            connection.withConnection("DELETE FROM Jela WHERE id = ?", preparedStatement -> {
+                try {
+                    preparedStatement.executeUpdate();
+                } catch (SQLException e) {
+                    LOGGER.log(Level.SEVERE, "Greska pri brisanju jela iz restorana !", e);
+                }
+            }, jelo.getId());
         });
     }
 

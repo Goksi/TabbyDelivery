@@ -5,7 +5,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
+<AnchorPane prefHeight="443.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="tech.goksi.projekatop.controllers.admin.UrediRestoranController">
     <ListView fx:id="jelaListView" layoutX="329.0" layoutY="44.0" prefHeight="344.0" prefWidth="257.0"/>
@@ -19,19 +19,19 @@
             <Font size="21.0"/>
         </font>
     </Label>
-    <TextField fx:id="nazivTextField" layoutX="14.0" layoutY="35.0"/>
+    <TextField fx:id="nazivTextField" layoutX="14.0" layoutY="35.0" onKeyTyped="#onFieldWrite"/>
     <Label layoutX="57.0" layoutY="69.0" text="Adresa">
         <font>
             <Font size="21.0"/>
         </font>
     </Label>
-    <TextField fx:id="adresaTextField" layoutX="14.0" layoutY="100.0"/>
+    <TextField fx:id="adresaTextField" layoutX="14.0" layoutY="100.0" onKeyTyped="#onFieldWrite"/>
     <Label layoutX="26.0" layoutY="134.0" text="Trenutni logo">
         <font>
             <Font size="21.0"/>
         </font>
     </Label>
-    <Button layoutX="215.0" layoutY="348.0" mnemonicParsing="false" onAction="#onSacuvaj" prefHeight="38.0"
+    <Button layoutX="215.0" layoutY="388.0" mnemonicParsing="false" onAction="#onSacuvaj" prefHeight="38.0"
             prefWidth="85.0" text="Sacuvaj"/>
     <ImageView fx:id="logoView" fitHeight="168.0" fitWidth="227.0" layoutX="8.0" layoutY="164.0"
                onMouseClicked="#onLogoClick" pickOnBounds="true" preserveRatio="true">
@@ -39,4 +39,9 @@
             <Cursor fx:constant="HAND"/>
         </cursor>
     </ImageView>
+    <Label fx:id="errorLabel" alignment="CENTER" layoutX="8.0" layoutY="340.0" maxHeight="-Infinity"
+           maxWidth="-Infinity" prefHeight="57.0" prefWidth="175.0" textFill="RED" wrapText="true"/>
+    <Label fx:id="successLabel" alignment="CENTER" layoutX="8.0" layoutY="340.0" maxHeight="-Infinity"
+           maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="38.0" prefWidth="319.0"
+           textFill="GREEN" wrapText="true"/>
 </AnchorPane>

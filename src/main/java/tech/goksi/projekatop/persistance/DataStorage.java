@@ -1,5 +1,6 @@
 package tech.goksi.projekatop.persistance;
 
+import tech.goksi.projekatop.models.Jelo;
 import tech.goksi.projekatop.models.Korisnik;
 import tech.goksi.projekatop.models.Restoran;
 
@@ -30,4 +31,6 @@ public interface DataStorage {
     CompletableFuture<Void> modifyRestoran(Restoran restoran, Map<String, Object> fields);
 
     CompletableFuture<Void> addJeloToRestoran(Restoran restoran, String naziv, InputStream slika, int cena);
+
+    CompletableFuture<Void> obrisiJelo(Jelo jelo);
 }

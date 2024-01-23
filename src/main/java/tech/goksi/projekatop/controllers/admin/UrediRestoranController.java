@@ -181,7 +181,8 @@ public class UrediRestoranController implements DataStorageInjectable {
         confirmation.setTitle("Upozorenje");
         confirmation.showAndWait();
         if (confirmation.getResult() == ButtonType.YES) {
-            storage.obrisiJelo(jelo);
+            storage.obrisiJelo(jelo)
+                    .thenRun(() -> Platform.runLater(() -> jelaListView.getItems().remove(jelo)));
         }
     }
 

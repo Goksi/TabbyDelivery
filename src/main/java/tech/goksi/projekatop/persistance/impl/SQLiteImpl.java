@@ -272,15 +272,28 @@ public class SQLiteImpl implements DataStorage {
     }
 
     @Override
-    public CompletableFuture<Void> addJeloToRestoran(Restoran restoran, String naziv, InputStream slika, int cena) {
-        return CompletableFuture.runAsync(() -> {
+    public CompletableFuture<Jelo> addJeloToRestoran(Restoran restoran, String naziv, InputStream imageStream, int cena) {
+        return CompletableFuture.supplyAsync(() -> {
             connection.withConnection("INSERT INTO Jela(naziv, cena, image, restoran) VALUES (?, ?, ?, ?)", preparedStatement -> {
                 try {
                     preparedStatement.executeUpdate();
                 } catch (SQLException e) {
                     LOGGER.log(Level.SEVERE, "Greska pri dodavanju jela u restoran !", e);
                 }
-            }, naziv, cena, slika, restoran.getId());
+            }, naziv, cena, imageStream, restoran.getId());
+            return connection.withConnection("SELECT * FROM Jela WHERE naziv = ?", preparedStatement -> {
+                try {
+                    ResultSet resultSet = preparedStatement.executeQuery();
+                    if (!resultSet.next()) return null;
+                    int id = resultSet.getInt("id");
+                    byte[] slikaBytes = resultSet.getBytes("image");
+                    Image slika = slikaBytes != null ? new Image(new ByteArrayInputStream(slikaBytes)) : null;
+                    return new Jelo(id, naziv, slika, cena);
+                } catch (SQLException e) {
+                    LOGGER.log(Level.SEVERE, "Greska pri citanju dodatog jela !", e);
+                }
+                return null;
+            }, naziv);
         });
     }
 

@@ -1,9 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="tech.goksi.projekatop.controllers.admin.DodajJeloController"
-            prefHeight="443.0" prefWidth="600.0">
-
+<?import javafx.scene.text.*?>
+<AnchorPane prefHeight="443.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tech.goksi.projekatop.controllers.admin.DodajJeloController">
+    <Label layoutX="60.0" layoutY="36.0" text="Naziv jela">
+        <font>
+            <Font size="29.0"/>
+        </font>
+    </Label>
+    <Label layoutX="63.0" layoutY="115.0" text="Cena jela">
+        <font>
+            <Font size="29.0"/>
+        </font>
+    </Label>
+    <Label layoutX="414.0" layoutY="14.0" text="Slika">
+        <font>
+            <Font size="29.0"/>
+        </font>
+    </Label>
+    <TextField fx:id="nazivField" layoutX="47.0" layoutY="80.0" onKeyTyped="#onFieldWrite"/>
+    <TextField fx:id="cenaField" layoutX="47.0" layoutY="158.0" onKeyTyped="#onFieldWrite"/>
+    <ImageView fx:id="imageView" fitHeight="252.0" fitWidth="268.0" layoutX="309.0" layoutY="80.0"
+               onMouseClicked="#onSlikaClick" pickOnBounds="true" preserveRatio="true">
+        <cursor>
+            <Cursor fx:constant="HAND"/>
+        </cursor>
+    </ImageView>
+    <Button layoutX="60.0" layoutY="222.0" mnemonicParsing="false" onAction="#onDodajJelo" prefHeight="61.0"
+            prefWidth="123.0" text="Dodaj jelo">
+        <font>
+            <Font size="19.0"/>
+        </font>
+    </Button>
+    <Button mnemonicParsing="false" onAction="#onBack" prefHeight="25.0" prefWidth="48.0"
+            style="-fx-background-color: transparent;" text="←">
+        <font>
+            <Font size="20.0"/>
+        </font>
+        <tooltip>
+            <Tooltip showDelay="100ms" text="Vrati se na uredjivanje"/>
+        </tooltip>
+        <cursor>
+            <Cursor fx:constant="HAND"/>
+        </cursor>
+    </Button>
+    <Label fx:id="errorLabel" alignment="CENTER" layoutX="17.0" layoutY="390.0" prefHeight="39.0" prefWidth="579.0"
+           textFill="RED">
+        <font>
+            <Font size="27.0"/>
+        </font>
+    </Label>
+    <Label fx:id="successLabel" alignment="CENTER" layoutX="17.0" layoutY="390.0" prefHeight="39.0" prefWidth="579.0"
+           textFill="GREEN">
+        <font>
+            <Font size="27.0"/>
+        </font>
+    </Label>
 </AnchorPane>

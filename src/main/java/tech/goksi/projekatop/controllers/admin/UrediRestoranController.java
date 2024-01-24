@@ -5,20 +5,27 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import javafx.stage.Window;
+import javafx.util.Pair;
+import tech.goksi.projekatop.TabbyViews;
 import tech.goksi.projekatop.exceptions.RestoranExistException;
 import tech.goksi.projekatop.models.Jelo;
 import tech.goksi.projekatop.models.Restoran;
 import tech.goksi.projekatop.persistance.DataStorage;
 import tech.goksi.projekatop.persistance.DataStorageInjectable;
+import tech.goksi.projekatop.utils.ControllerFactory;
 import tech.goksi.projekatop.utils.ImagePicker;
 import tech.goksi.projekatop.utils.ImageUtils;
+import tech.goksi.projekatop.utils.ViewLoader;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -52,13 +59,20 @@ public class UrediRestoranController implements DataStorageInjectable {
     public void initialize() {
         jelaListView.setCellFactory(jelaView -> {
             ListCell<Jelo> cell = new ListCell<>() {
+
+
                 @Override
                 protected void updateItem(Jelo jelo, boolean empty) {
                     super.updateItem(jelo, empty);
                     if (empty || jelo == null) {
                         setText(null);
+                        setGraphic(null);
                     } else {
-                        setText(jelo.getNaziv());
+                        ImageView imageView = new ImageView(jelo.getImage());
+                        imageView.setFitWidth(50);
+                        imageView.setPreserveRatio(true);
+                        setText("%s; %d din".formatted(jelo.getNaziv(), jelo.getCena()));
+                        setGraphic(imageView);
                     }
                 }
             };
@@ -85,9 +99,8 @@ public class UrediRestoranController implements DataStorageInjectable {
         obrisiLogo.addEventHandler(ActionEvent.ACTION, this::onDeleteLogo);
         logoContextMenu.getItems().add(obrisiLogo);
 
-        logoView.setOnContextMenuRequested(contextMenuEvent -> {
-            logoContextMenu.show(logoView, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
-        });
+        logoView.setOnContextMenuRequested(contextMenuEvent ->
+                logoContextMenu.show(logoView, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY()));
 
         ContextMenu jelaContextMenu = new ContextMenu();
         MenuItem dodajJelo = new MenuItem("Dodaj jelo");
@@ -98,9 +111,8 @@ public class UrediRestoranController implements DataStorageInjectable {
         jelaContextMenu.getItems().add(dodajJelo);
         jelaContextMenu.getItems().add(obrisiJelo);
         jelaListView.setContextMenu(jelaContextMenu);
-        jelaListView.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
-            obrisiJelo.setDisable(newValue == null);
-        });
+        jelaListView.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) ->
+                obrisiJelo.setDisable(newValue == null));
     }
 
     @Override
@@ -166,7 +178,11 @@ public class UrediRestoranController implements DataStorageInjectable {
     }
 
     public void onDodajJelo(ActionEvent actionEvent) {
-
+        Parent parent = ViewLoader.load(TabbyViews.DODAJ_JELO, clazz -> ControllerFactory.controllerForClass(clazz, storage, null));
+        Scene scene = jelaListView.getScene();
+        scene.setUserData(restoranProperty.get());
+        parent.setUserData(new Pair<>(scene, jelaListView));
+        ((Stage) jelaListView.getScene().getWindow()).setScene(new Scene(parent));
     }
 
     public void onObrisiJelo(ActionEvent actionEvent) {

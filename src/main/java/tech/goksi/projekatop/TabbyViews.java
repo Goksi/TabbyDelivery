@@ -12,7 +12,7 @@ public enum TabbyViews {
     UREDI_RESTORAN("/views/admin/uredi-restoran-view.fxml"),
     DODAJ_JELO("/views/admin/dodaj-jelo-view.fxml"),
     NOVA_PORUDZBINA("/views/porudzbine/nova-porudzbina-view.fxml"),
-    RESTORAN_KARTICA("/view/porudzbine/restoran-kartica-view.fxml");
+    RESTORAN_KARTICA("/views/porudzbine/restoran-kartica-view.fxml");
 
     private final String path;
 

@@ -32,7 +32,7 @@ public class MainController implements DataStorageInjectable, KorisnikInjectable
 
     public void initialize() {
         if (!currentUser.isAdmin()) adminMenu.setVisible(false);
-        MenuItem welcomeBackItem = mojNalogMenu.getItems().get(0);
+        MenuItem welcomeBackItem = mojNalogMenu.getItems().getFirst();
         welcomeBackItem.setText(String.format(welcomeBackItem.getText(), currentUser.getUsername()));
         pageNavigator = new PageNavigator(contentScene, storage, currentUser);
     }

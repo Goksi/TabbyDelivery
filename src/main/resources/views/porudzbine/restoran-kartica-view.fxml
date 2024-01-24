@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<AnchorPane prefHeight="269" prefWidth="244" xmlns="http://javafx.com/javafx/17.0.2-ea"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tech.goksi.projekatop.controllers.porudzbine.RestoranKarticaController">
+    <ImageView fx:id="logoView" fitHeight="150.0" fitWidth="244.0" layoutX="-1.0" pickOnBounds="true"
+               preserveRatio="true"/>
+    <Label fx:id="infoLabel" layoutX="14.0" layoutY="193.0" text="Naziv: %s&#10;Adresa: %s">
+        <font>
+            <Font size="21.0"/>
+        </font>
+    </Label>
+    <cursor>
+        <Cursor fx:constant="HAND"/>
+    </cursor>
+</AnchorPane>

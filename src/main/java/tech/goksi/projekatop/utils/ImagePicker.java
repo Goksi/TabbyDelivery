@@ -12,7 +12,7 @@ public class ImagePicker {
     private ImagePicker() {
         fileChooser = new FileChooser();
         fileChooser.setTitle("Otvorite sliku");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Slika (*.bmp, *.gif, *.jpeg, *.png)", "*.bmp", "*.gif", "*.jpeg", "*.png"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Slika (*.bmp, *.gif, *.jpeg, *.jpg, *.png)", "*.bmp", "*.gif", "*.jpeg", "*.jpg", "*.png"));
     }
 
     public File open(Window parent) {

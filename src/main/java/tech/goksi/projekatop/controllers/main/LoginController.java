@@ -69,7 +69,7 @@ public class LoginController implements DataStorageInjectable {
     public void onRegisterClick(MouseEvent mouseEvent) {
         Parent parent = ((Label) mouseEvent.getSource()).getParent();
         StackPane stackPane = (StackPane) parent.getParent();
-        stackPane.getChildren().get(0).setVisible(true);
+        stackPane.getChildren().getFirst().setVisible(true);
         parent.setVisible(false);
     }
 

@@ -2,10 +2,9 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.SubScene?>
-<AnchorPane prefHeight="577.0" prefWidth="1002.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="tech.goksi.projekatop.controllers.main.MainController">
+<?import javafx.scene.layout.Pane?>
+<AnchorPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tech.goksi.projekatop.controllers.main.MainController">
     <MenuBar fx:id="menuBar" layoutX="-1.0" prefHeight="29.0" prefWidth="1002.0">
         <Menu fx:id="mojNalogMenu" mnemonicParsing="false" text="Moj nalog">
             <MenuItem mnemonicParsing="false" text="Dobro dosli nazad %s !"/>
@@ -27,9 +26,5 @@
             </graphic>
         </Menu>
     </MenuBar>
-    <SubScene fx:id="contentScene" height="548.0" layoutY="29.0" width="1002.0">
-        <root>
-            <Region/>
-        </root>
-    </SubScene>
+    <Pane fx:id="contentPane" layoutY="29.0"/>
 </AnchorPane>

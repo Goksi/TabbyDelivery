@@ -4,8 +4,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.SubScene;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import tech.goksi.projekatop.TabbyViews;
@@ -26,7 +26,7 @@ public class MainController implements DataStorageInjectable, KorisnikInjectable
     @FXML
     private Menu mojNalogMenu;
     @FXML
-    private SubScene contentScene;
+    private Pane contentPane;
     private DataStorage storage;
     private Korisnik currentUser;
 
@@ -34,7 +34,7 @@ public class MainController implements DataStorageInjectable, KorisnikInjectable
         if (!currentUser.isAdmin()) adminMenu.setVisible(false);
         MenuItem welcomeBackItem = mojNalogMenu.getItems().getFirst();
         welcomeBackItem.setText(String.format(welcomeBackItem.getText(), currentUser.getUsername()));
-        pageNavigator = new PageNavigator(contentScene, storage, currentUser);
+        pageNavigator = new PageNavigator(contentPane, storage, currentUser);
     }
 
     @Override

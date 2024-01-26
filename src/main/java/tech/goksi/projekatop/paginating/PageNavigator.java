@@ -39,7 +39,7 @@ public class PageNavigator {
     }
 
     private void goToPage(Page page) {
-        Parent parent = cachedPages.computeIfAbsent(page, k -> pages.get(k).get());
+        Parent parent = page.isCached ? cachedPages.computeIfAbsent(page, k -> pages.get(k).get()) : pages.get(page).get();
         rootPane.getChildren().setAll(parent);
         Scene scene = rootPane.getScene();
         if (scene != null) {
@@ -52,11 +52,22 @@ public class PageNavigator {
         /*Moj nalog*/
         PODESAVANJA,
         /*Porudzbine*/
-        NOVA_PORUDZBINA,
+        NOVA_PORUDZBINA(false),
         MOJE_PORUDZBINE,
         /*Admin*/
         KORISNICI,
         PORUDZBINE,
-        RESTORANI
+        RESTORANI;
+
+        private final boolean isCached;
+
+        Page() {
+            this.isCached = true;
+        }
+
+        Page(boolean isCached) {
+            this.isCached = isCached;
+        }
+
     }
 }

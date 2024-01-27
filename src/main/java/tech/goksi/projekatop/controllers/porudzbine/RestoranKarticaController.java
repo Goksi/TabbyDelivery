@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import tech.goksi.projekatop.models.Restoran;
 import tech.goksi.projekatop.utils.ImageUtils;
@@ -19,14 +20,13 @@ public class RestoranKarticaController {
     private ImageView logoView;
     @FXML
     private Label infoLabel;
-    private String pattern;
 
     public RestoranKarticaController() {
         restoranProperty = new SimpleObjectProperty<>();
     }
 
     public void initialize() {
-        pattern = infoLabel.getText();
+        String pattern = infoLabel.getText();
 
         restoranProperty.addListener((obs, oldValue, newValue) -> {
             if (newValue == null) return;
@@ -40,4 +40,7 @@ public class RestoranKarticaController {
         }));
     }
 
+    public void onClick(MouseEvent mouseEvent) {
+        
+    }
 }

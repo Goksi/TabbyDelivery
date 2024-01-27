@@ -5,7 +5,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-<AnchorPane fx:id="pane" prefHeight="269" prefWidth="244"
+<AnchorPane fx:id="pane" onMouseClicked="#onClick" prefHeight="269" prefWidth="244"
             style="-fx-border-color: #1078ff; -fx-border-width: 2; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.5, 0.0, 0.0); -fx-background-color: #d8d8f2;"
             xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="tech.goksi.projekatop.controllers.porudzbine.RestoranKarticaController">

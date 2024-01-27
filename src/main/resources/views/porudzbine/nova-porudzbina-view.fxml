@@ -5,11 +5,11 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="631.0" prefWidth="1002" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tech.goksi.projekatop.controllers.porudzbine.NovaPorudzbinaController">
-    <Label layoutX="445.0" layoutY="5.0" text="Restorani">
+<AnchorPane prefHeight="655.0" prefWidth="1002.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tech.goksi.projekatop.controllers.porudzbine.NovaPorudzbinaController">
+    <Label layoutX="445.0" text="Restorani">
         <font>
             <Font size="27.0" />
         </font>
     </Label>
-    <Pagination fx:id="pagination" layoutX="-7.0" layoutY="44.0" prefHeight="585.0" prefWidth="1009.0" />
+    <Pagination fx:id="pagination" layoutX="10.0" layoutY="37.0" prefHeight="560.0" prefWidth="983.0" />
 </AnchorPane>

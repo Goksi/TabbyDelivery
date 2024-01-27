@@ -2,7 +2,7 @@
 
 <?import javafx.scene.layout.*?>
 <GridPane fx:id="pane" hgap="40" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-          prefHeight="548.0" prefWidth="1002.0" vgap="40" xmlns="http://javafx.com/javafx/17.0.2-ea"
+          prefHeight="548.0" prefWidth="981.0" vgap="40" xmlns="http://javafx.com/javafx/17.0.2-ea"
           xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="tech.goksi.projekatop.controllers.porudzbine.RestoraniListController">
     <columnConstraints>

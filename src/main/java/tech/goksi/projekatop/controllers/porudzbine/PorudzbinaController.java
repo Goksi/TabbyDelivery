@@ -1,52 +1,40 @@
 package tech.goksi.projekatop.controllers.porudzbine;
 
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
-import javafx.util.Pair;
 import tech.goksi.projekatop.models.NarucenoJelo;
 import tech.goksi.projekatop.models.PorudzbinaMaker;
 import tech.goksi.projekatop.models.Restoran;
 import tech.goksi.projekatop.persistance.DataStorage;
-import tech.goksi.projekatop.persistance.DataStorageInjectable;
+import tech.goksi.projekatop.utils.Injectable;
 
-public class PorudzbinaController implements DataStorageInjectable {
+public class PorudzbinaController implements Injectable {
     private final PorudzbinaMaker trenutnaPorudzbina;
-    private final SimpleObjectProperty<Restoran> restoranProperty;
+    private final Restoran restoran;
+    private final DataStorage storage;
+    private String cenaPattern;
     @FXML
     private ListView<NarucenoJelo> racunListView;
     @FXML
+    private Label cenaLabel;
+    @FXML
     private GridPane gridPane;
-    private Runnable backer;
-    private DataStorage storage;
 
-    public PorudzbinaController() {
+    public PorudzbinaController(DataStorage storage, Restoran restoran) {
         trenutnaPorudzbina = new PorudzbinaMaker();
-        restoranProperty = new SimpleObjectProperty<>();
+        this.storage = storage;
+        this.restoran = restoran;
     }
 
-    @SuppressWarnings("unchecked")
     public void initialize() {
         racunListView.itemsProperty().bind(trenutnaPorudzbina.narucenaJelaProperty());
-
-        racunListView.sceneProperty().addListener((obs, oldValue, newValue) -> {
-            if (newValue != null) {
-                Pair<Runnable, Restoran> userData = (Pair<Runnable, Restoran>) newValue.getRoot().getUserData();
-                restoranProperty.set(userData.getValue());
-                backer = userData.getKey();
-
-            }
+        cenaPattern = cenaLabel.getText();
+        trenutnaPorudzbina.ukupnaCenaPropertyProperty().addListener((obs, oldValue, newValue) -> {
+            cenaLabel.setText(cenaPattern.formatted(newValue));
         });
+        // TODO staviti jela
     }
 
-    @Override
-    public void setDataStorage(DataStorage storage) {
-        this.storage = storage;
-    }
-
-    public void onBack(ActionEvent event) {
-        backer.run();
-    }
 }

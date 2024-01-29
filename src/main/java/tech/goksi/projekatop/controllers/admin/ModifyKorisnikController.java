@@ -7,18 +7,19 @@ import javafx.scene.input.KeyEvent;
 import tech.goksi.projekatop.controllers.main.RegisterController;
 import tech.goksi.projekatop.exceptions.KorisnikExistException;
 import tech.goksi.projekatop.models.Korisnik;
-import tech.goksi.projekatop.models.KorisnikInjectable;
 import tech.goksi.projekatop.persistance.DataStorage;
-import tech.goksi.projekatop.persistance.DataStorageInjectable;
 import tech.goksi.projekatop.utils.EncryptionUtils;
+import tech.goksi.projekatop.utils.Injectable;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ModifyKorisnikController implements DataStorageInjectable, KorisnikInjectable {
+public class ModifyKorisnikController implements Injectable {
     private static final Logger LOGGER = Logger.getLogger(RegisterController.class.getName());
+    private final DataStorage storage;
+    private final Korisnik korisnik;
 
     @FXML
     private TextField idField;
@@ -34,8 +35,12 @@ public class ModifyKorisnikController implements DataStorageInjectable, Korisnik
     private Label errorLabel;
     @FXML
     private Label successLabel;
-    private DataStorage storage;
-    private Korisnik korisnik;
+
+
+    public ModifyKorisnikController(DataStorage storage, Korisnik korisnik) {
+        this.storage = storage;
+        this.korisnik = korisnik;
+    }
 
     public void initialize() {
         if (korisnik != null) {
@@ -113,16 +118,6 @@ public class ModifyKorisnikController implements DataStorageInjectable, Korisnik
         } else {
             onUrediKorisnika();
         }
-    }
-
-    @Override
-    public void setModel(Korisnik korisnik) {
-        this.korisnik = korisnik;
-    }
-
-    @Override
-    public void setDataStorage(DataStorage storage) {
-        this.storage = storage;
     }
 
     public void onFieldWrite(KeyEvent keyEvent) {

@@ -13,21 +13,24 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import javafx.util.Pair;
 import tech.goksi.projekatop.models.Jelo;
 import tech.goksi.projekatop.models.Restoran;
 import tech.goksi.projekatop.persistance.DataStorage;
-import tech.goksi.projekatop.persistance.DataStorageInjectable;
 import tech.goksi.projekatop.utils.ImagePicker;
 import tech.goksi.projekatop.utils.ImageUtils;
+import tech.goksi.projekatop.utils.Injectable;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-public class DodajJeloController implements DataStorageInjectable {
+public class DodajJeloController implements Injectable {
     private final SimpleObjectProperty<File> imageProperty;
+    private final DataStorage storage;
+    private final Scene urediScene;
+    private final Restoran restoran;
+    private final ListView<Jelo> jelaListView;
     @FXML
     private TextField nazivField;
     @FXML
@@ -38,24 +41,18 @@ public class DodajJeloController implements DataStorageInjectable {
     private Label successLabel;
     @FXML
     private Label errorLabel;
-    private DataStorage storage;
-    private Scene urediScene;
-    private ListView<Jelo> jelaListView;
 
-    public DodajJeloController() {
+    public DodajJeloController(DataStorage storage, Scene scene, ListView<Jelo> jelaListView, Restoran restoran) {
+        this.storage = storage;
+        this.urediScene = scene;
+        this.jelaListView = jelaListView;
+        this.restoran = restoran;
         imageProperty = new SimpleObjectProperty<>();
     }
 
-    @SuppressWarnings("unchecked") // this will always work
     public void initialize() {
         Image noImage = ImageUtils.textToImage("Nema\nslike", (int) imageView.getFitWidth(), (int) imageView.getFitHeight());
         imageView.setImage(noImage);
-        imageView.sceneProperty().addListener((obs, oldValue, newValue) -> {
-            if (newValue == null) return;
-            Pair<Scene, ListView<Jelo>> userData = (Pair<Scene, ListView<Jelo>>) newValue.getRoot().getUserData();
-            urediScene = userData.getKey();
-            jelaListView = userData.getValue();
-        });
         ContextMenu contextMenu = new ContextMenu();
         MenuItem obrisiSliku = new MenuItem("Obrisi sliku");
         obrisiSliku.setDisable(true);
@@ -75,10 +72,6 @@ public class DodajJeloController implements DataStorageInjectable {
 
     }
 
-    @Override
-    public void setDataStorage(DataStorage storage) {
-        this.storage = storage;
-    }
 
     public void onSlikaClick(MouseEvent event) {
         if (event.getButton() != MouseButton.PRIMARY) return;
@@ -122,7 +115,6 @@ public class DodajJeloController implements DataStorageInjectable {
                 return;
             }
         }
-        Restoran restoran = (Restoran) urediScene.getUserData();
         storage.addJeloToRestoran(restoran, naziv, imageStream, cena)
                 .thenAccept(jelo -> Platform.runLater(() -> {
                     successLabel.setText("Uspesno ste dodali jelo u restoran " + restoran.getNaziv() + "!");

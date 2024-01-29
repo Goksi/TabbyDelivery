@@ -13,8 +13,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Window;
 import tech.goksi.projekatop.exceptions.RestoranExistException;
 import tech.goksi.projekatop.persistance.DataStorage;
-import tech.goksi.projekatop.persistance.DataStorageInjectable;
 import tech.goksi.projekatop.utils.ImagePicker;
+import tech.goksi.projekatop.utils.Injectable;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,8 +23,9 @@ import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DodajRestoranController implements DataStorageInjectable {
+public class DodajRestoranController implements Injectable {
     private static final Logger LOGGER = Logger.getLogger(DodajRestoranController.class.getName());
+    private final DataStorage storage;
     @FXML
     private Label errorLabel;
     @FXML
@@ -37,8 +38,11 @@ public class DodajRestoranController implements DataStorageInjectable {
     private Label closeLogoLabel;
     @FXML
     private Label imageLabel;
-    private DataStorage storage;
     private SimpleObjectProperty<File> logoProperty;
+
+    public DodajRestoranController(DataStorage storage) {
+        this.storage = storage;
+    }
 
     public void initialize() {
         logoProperty = new SimpleObjectProperty<>();
@@ -51,11 +55,6 @@ public class DodajRestoranController implements DataStorageInjectable {
                 closeLogoLabel.setVisible(false);
             }
         }));
-    }
-
-    @Override
-    public void setDataStorage(DataStorage storage) {
-        this.storage = storage;
     }
 
     public void onPretraziLogo(ActionEvent actionEvent) {

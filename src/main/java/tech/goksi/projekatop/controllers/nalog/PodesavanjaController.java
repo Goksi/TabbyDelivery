@@ -6,11 +6,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.input.KeyEvent;
 import tech.goksi.projekatop.models.Korisnik;
-import tech.goksi.projekatop.models.KorisnikInjectable;
 import tech.goksi.projekatop.persistance.DataStorage;
-import tech.goksi.projekatop.persistance.DataStorageInjectable;
+import tech.goksi.projekatop.utils.Injectable;
 
-public class PodesavanjaController implements DataStorageInjectable, KorisnikInjectable {
+public class PodesavanjaController implements Injectable {
+    private final DataStorage storage;
+    private Korisnik currentUser;
     @FXML
     private PasswordField passwordField;
     @FXML
@@ -21,23 +22,16 @@ public class PodesavanjaController implements DataStorageInjectable, KorisnikInj
     private Label errorLabel;
     @FXML
     private Label infoLabel;
-    private Korisnik currentUser;
-    private DataStorage storage;
+
+    public PodesavanjaController(DataStorage storage, Korisnik currentUser) {
+        this.currentUser = currentUser;
+        this.storage = storage;
+    }
 
     public void initialize() {
         infoLabel.setText(String.format(
                 infoLabel.getText(), currentUser.getUsername(), currentUser.isAdmin() ? "DA" : "NE", currentUser.getDatumRegistracije(), 1
         )); // TODO
-    }
-
-    @Override
-    public void setModel(Korisnik korisnik) {
-        this.currentUser = korisnik;
-    }
-
-    @Override
-    public void setDataStorage(DataStorage storage) {
-        this.storage = storage;
     }
 
     public void onPromeniLoznikuClick() {

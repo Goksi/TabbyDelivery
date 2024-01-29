@@ -15,15 +15,15 @@ import javafx.stage.Stage;
 import tech.goksi.projekatop.TabbyViews;
 import tech.goksi.projekatop.models.Restoran;
 import tech.goksi.projekatop.persistance.DataStorage;
-import tech.goksi.projekatop.persistance.DataStorageInjectable;
-import tech.goksi.projekatop.utils.ControllerFactory;
 import tech.goksi.projekatop.utils.ImageUtils;
+import tech.goksi.projekatop.utils.Injectable;
 import tech.goksi.projekatop.utils.ViewLoader;
 
 import java.text.MessageFormat;
 
-public class RestoraniController implements DataStorageInjectable {
+public class RestoraniController implements Injectable {
     private final ObservableList<Restoran> restorani;
+    private final DataStorage storage;
     private final String labelFormat;
     @FXML
     private Button urediRestoranBtn;
@@ -33,12 +33,12 @@ public class RestoraniController implements DataStorageInjectable {
     private Label infoLabel;
     @FXML
     private ListView<Restoran> restoraniListView;
-    private DataStorage storage;
 
 
-    public RestoraniController() {
+    public RestoraniController(DataStorage storage) {
         restorani = FXCollections.observableArrayList();
         labelFormat = "Naziv: {0}\nAdresa: {1}\nBroj jela: {2}";
+        this.storage = storage;
     }
 
     public void initialize() {
@@ -76,11 +76,6 @@ public class RestoraniController implements DataStorageInjectable {
         populateListView();
     }
 
-    @Override
-    public void setDataStorage(DataStorage storage) {
-        this.storage = storage;
-    }
-
 
     public void onSelection(Restoran restoran) {
         if (restoran == null) {
@@ -102,7 +97,7 @@ public class RestoraniController implements DataStorageInjectable {
         button.setDisable(true);
         Stage stage = new Stage();
         stage.setTitle("Dodaj restoran");
-        Parent parent = ViewLoader.load(TabbyViews.DODAJ_RESTORAN, clazz -> ControllerFactory.controllerForClass(clazz, storage, null));
+        Parent parent = ViewLoader.load(TabbyViews.DODAJ_RESTORAN, storage);
         stage.setResizable(false);
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
         stage.setScene(new Scene(parent));
@@ -116,8 +111,7 @@ public class RestoraniController implements DataStorageInjectable {
         Button button = (Button) actionEvent.getSource();
         button.setDisable(true);
         Restoran restoran = restoraniListView.getSelectionModel().getSelectedItem();
-        Parent parent = ViewLoader.load(TabbyViews.UREDI_RESTORAN, clazz -> ControllerFactory.controllerForClass(clazz, storage, null));
-        parent.setUserData(restoran);
+        Parent parent = ViewLoader.load(TabbyViews.UREDI_RESTORAN, storage, restoran);
         Stage stage = new Stage();
         stage.setTitle("Uredi restoran | " + restoran.getNaziv());
         stage.setResizable(false);

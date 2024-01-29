@@ -13,21 +13,20 @@ import javafx.stage.Stage;
 import tech.goksi.projekatop.TabbyViews;
 import tech.goksi.projekatop.models.Korisnik;
 import tech.goksi.projekatop.persistance.DataStorage;
-import tech.goksi.projekatop.persistance.DataStorageInjectable;
-import tech.goksi.projekatop.utils.ControllerFactory;
+import tech.goksi.projekatop.utils.Injectable;
 import tech.goksi.projekatop.utils.ViewLoader;
 
-public class KorisniciController implements DataStorageInjectable {
-
+public class KorisniciController implements Injectable {
+    private final DataStorage storage;
     @FXML
     private ListView<Korisnik> korisniciListView;
     @FXML
     private ProgressIndicator loadingSpinner;
     private ObservableList<Korisnik> korisniciList;
-    private DataStorage storage;
 
-    public KorisniciController() {
+    public KorisniciController(DataStorage storage) {
         korisniciList = FXCollections.observableArrayList();
+        this.storage = storage;
     }
 
     public void initialize() {
@@ -108,7 +107,7 @@ public class KorisniciController implements DataStorageInjectable {
         } else stage.setTitle("TabbyDelivery | Uredi korisnika");
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
         stage.setResizable(false);
-        Parent parent = ViewLoader.load(TabbyViews.MODIFY_KORISNIK, clazz -> ControllerFactory.controllerForClass(clazz, storage, korisnik));
+        Parent parent = ViewLoader.load(TabbyViews.MODIFY_KORISNIK, storage, korisnik);
         stage.setScene(new Scene(parent));
         stage.setOnHiding(event -> populateListView());
         return stage;
@@ -125,12 +124,5 @@ public class KorisniciController implements DataStorageInjectable {
                     korisniciList.setAll(list);
                     loadingSpinner.setVisible(false);
                 }));
-    }
-
-
-    @Override
-    public void setDataStorage(DataStorage storage) {
-
-        this.storage = storage;
     }
 }

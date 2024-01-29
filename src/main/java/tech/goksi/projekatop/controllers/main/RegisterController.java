@@ -11,13 +11,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import tech.goksi.projekatop.exceptions.KorisnikExistException;
 import tech.goksi.projekatop.persistance.DataStorage;
-import tech.goksi.projekatop.persistance.DataStorageInjectable;
+import tech.goksi.projekatop.utils.Injectable;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class RegisterController implements DataStorageInjectable {
+public class RegisterController implements Injectable {
     private static final Logger LOGGER = Logger.getLogger(RegisterController.class.getName());
+    private final DataStorage storage;
 
     @FXML
     private TextField usernameField;
@@ -29,7 +30,10 @@ public class RegisterController implements DataStorageInjectable {
     private Label errorLabel;
     @FXML
     private Label successLabel;
-    private DataStorage storage;
+
+    public RegisterController(DataStorage storage) {
+        this.storage = storage;
+    }
 
     public void onRegisterClick() {
         String username = usernameField.getText();
@@ -67,11 +71,6 @@ public class RegisterController implements DataStorageInjectable {
         StackPane stackPane = (StackPane) parent.getParent();
         stackPane.getChildren().get(1).setVisible(true);
         parent.setVisible(false);
-    }
-
-    @Override
-    public void setDataStorage(DataStorage storage) {
-        this.storage = storage;
     }
 
     public void onFieldWrite(KeyEvent keyEvent) {

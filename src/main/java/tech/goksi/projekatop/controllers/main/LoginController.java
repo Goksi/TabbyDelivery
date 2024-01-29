@@ -16,19 +16,21 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import tech.goksi.projekatop.TabbyViews;
 import tech.goksi.projekatop.persistance.DataStorage;
-import tech.goksi.projekatop.persistance.DataStorageInjectable;
-import tech.goksi.projekatop.utils.ControllerFactory;
+import tech.goksi.projekatop.utils.Injectable;
 import tech.goksi.projekatop.utils.ViewLoader;
 
-public class LoginController implements DataStorageInjectable {
+public class LoginController implements Injectable {
+    private final DataStorage storage;
     @FXML
     private TextField usernameField;
     @FXML
     private PasswordField passwordField;
     @FXML
     private Label errorLabel;
-    private DataStorage storage;
 
+    public LoginController(DataStorage storage) {
+        this.storage = storage;
+    }
 
     public void onLoginClick(ActionEvent actionEvent) {
         String username = usernameField.getText();
@@ -51,7 +53,7 @@ public class LoginController implements DataStorageInjectable {
                         return;
                     }
                     Parent mainWindow = ViewLoader.load(TabbyViews.MAIN,
-                            clazz -> ControllerFactory.controllerForClass(clazz, storage, korisnik));
+                            storage, korisnik);
                     Stage mainStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                     Platform.runLater(() -> mainStage.setScene(new Scene(mainWindow)));
 
@@ -71,10 +73,5 @@ public class LoginController implements DataStorageInjectable {
         StackPane stackPane = (StackPane) parent.getParent();
         stackPane.getChildren().getFirst().setVisible(true);
         parent.setVisible(false);
-    }
-
-    @Override
-    public void setDataStorage(DataStorage storage) {
-        this.storage = storage;
     }
 }

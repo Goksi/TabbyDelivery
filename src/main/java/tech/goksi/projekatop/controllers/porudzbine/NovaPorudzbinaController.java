@@ -6,27 +6,27 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Pagination;
 import javafx.util.Callback;
 import tech.goksi.projekatop.TabbyViews;
 import tech.goksi.projekatop.models.Restoran;
 import tech.goksi.projekatop.persistance.DataStorage;
-import tech.goksi.projekatop.persistance.DataStorageInjectable;
-import tech.goksi.projekatop.utils.ControllerFactory;
+import tech.goksi.projekatop.utils.Injectable;
 import tech.goksi.projekatop.utils.ViewLoader;
 
 import java.util.List;
 
-public class NovaPorudzbinaController implements DataStorageInjectable {
+public class NovaPorudzbinaController implements Injectable {
     private static final int RESTORANI_PER_PAGE = 4;
+    private final DataStorage storage;
     private final ObservableList<Restoran> restorani;
     @FXML
     private Pagination pagination;
-    private DataStorage storage;
 
-    public NovaPorudzbinaController() {
+
+    public NovaPorudzbinaController(DataStorage storage) {
         restorani = FXCollections.observableArrayList();
+        this.storage = storage;
     }
 
     @SuppressWarnings("unchecked")
@@ -45,11 +45,6 @@ public class NovaPorudzbinaController implements DataStorageInjectable {
                 .thenAccept(restorani::setAll);
     }
 
-    @Override
-    public void setDataStorage(DataStorage storage) {
-        this.storage = storage;
-    }
-
     private record TabbyPageFactory(List<Restoran> restorani, DataStorage storage) implements Callback<Integer, Node> {
 
         @Override
@@ -57,9 +52,7 @@ public class NovaPorudzbinaController implements DataStorageInjectable {
             int start = integer * RESTORANI_PER_PAGE;
             int end = Math.min(start + RESTORANI_PER_PAGE, restorani.size());
             List<Restoran> forPage = restorani.subList(start, end);
-            Parent parent = ViewLoader.load(TabbyViews.RESTORAN_LIST, clazz -> ControllerFactory.controllerForClass(clazz, storage, null));
-            parent.setUserData(forPage);
-            return parent;
+            return ViewLoader.load(TabbyViews.RESTORAN_LIST, storage, forPage);
         }
     }
 }

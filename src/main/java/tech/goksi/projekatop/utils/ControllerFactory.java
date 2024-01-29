@@ -1,10 +1,5 @@
 package tech.goksi.projekatop.utils;
 
-import tech.goksi.projekatop.models.Korisnik;
-import tech.goksi.projekatop.models.KorisnikInjectable;
-import tech.goksi.projekatop.persistance.DataStorage;
-import tech.goksi.projekatop.persistance.DataStorageInjectable;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,16 +9,14 @@ public class ControllerFactory {
     private ControllerFactory() {
     }
 
-    public static <T> T controllerForClass(Class<T> clazz, DataStorage dataStorage, Korisnik korisnik) {
+    @SuppressWarnings("unchecked")
+    public static <T> T controllerForClass(Class<T> clazz, Object... args) {
         try {
-            T controllerInstance = clazz.getConstructor().newInstance();
-            if (korisnik != null && KorisnikInjectable.class.isAssignableFrom(clazz)) {
-                KorisnikInjectable korisnikInjectable = (KorisnikInjectable) controllerInstance;
-                korisnikInjectable.setModel(korisnik);
-            }
-            if (dataStorage != null && DataStorageInjectable.class.isAssignableFrom(clazz)) {
-                DataStorageInjectable dataStorageInjectable = (DataStorageInjectable) controllerInstance;
-                dataStorageInjectable.setDataStorage(dataStorage);
+            T controllerInstance;
+            if (Injectable.class.isAssignableFrom(clazz)) {
+                controllerInstance = (T) clazz.getConstructors()[0].newInstance(args); // injectable class will always have exactly 1 constructor
+            } else {
+                controllerInstance = clazz.getConstructor().newInstance();
             }
             return controllerInstance;
         } catch (Exception e) {

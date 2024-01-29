@@ -7,7 +7,6 @@ import javafx.scene.layout.Pane;
 import tech.goksi.projekatop.TabbyViews;
 import tech.goksi.projekatop.models.Korisnik;
 import tech.goksi.projekatop.persistance.DataStorage;
-import tech.goksi.projekatop.utils.ControllerFactory;
 import tech.goksi.projekatop.utils.ViewLoader;
 
 import java.util.HashMap;
@@ -24,10 +23,10 @@ public class PageNavigator {
         this.rootPane = rootPane;
         pages = new HashMap<>();
         cachedPages = new HashMap<>();
-        pages.put(Page.PODESAVANJA, () -> ViewLoader.load(TabbyViews.PODESAVANJA, clazz -> ControllerFactory.controllerForClass(clazz, dataStorage, currentUser)));
-        pages.put(Page.KORISNICI, () -> ViewLoader.load(TabbyViews.KORISNICI, clazz -> ControllerFactory.controllerForClass(clazz, dataStorage, null)));
-        pages.put(Page.RESTORANI, () -> ViewLoader.load(TabbyViews.RESTORANI, clazz -> ControllerFactory.controllerForClass(clazz, dataStorage, null)));
-        pages.put(Page.NOVA_PORUDZBINA, () -> ViewLoader.load(TabbyViews.NOVA_PORUDZBINA, clazz -> ControllerFactory.controllerForClass(clazz, dataStorage, null)));
+        pages.put(Page.PODESAVANJA, () -> ViewLoader.load(TabbyViews.PODESAVANJA, dataStorage, currentUser));
+        pages.put(Page.KORISNICI, () -> ViewLoader.load(TabbyViews.KORISNICI, dataStorage));
+        pages.put(Page.RESTORANI, () -> ViewLoader.load(TabbyViews.RESTORANI, dataStorage));
+        pages.put(Page.NOVA_PORUDZBINA, () -> ViewLoader.load(TabbyViews.NOVA_PORUDZBINA, dataStorage));
         goToPage(currentPage);
     }
 

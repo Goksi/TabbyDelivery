@@ -1,7 +1,6 @@
 package tech.goksi.projekatop.controllers.admin;
 
 import javafx.application.Platform;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -15,16 +14,14 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import javafx.util.Pair;
 import tech.goksi.projekatop.TabbyViews;
 import tech.goksi.projekatop.exceptions.RestoranExistException;
 import tech.goksi.projekatop.models.Jelo;
 import tech.goksi.projekatop.models.Restoran;
 import tech.goksi.projekatop.persistance.DataStorage;
-import tech.goksi.projekatop.persistance.DataStorageInjectable;
-import tech.goksi.projekatop.utils.ControllerFactory;
 import tech.goksi.projekatop.utils.ImagePicker;
 import tech.goksi.projekatop.utils.ImageUtils;
+import tech.goksi.projekatop.utils.Injectable;
 import tech.goksi.projekatop.utils.ViewLoader;
 
 import java.io.File;
@@ -33,9 +30,9 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
-/*TODO: jela cell i slika na njima*/
-public class UrediRestoranController implements DataStorageInjectable {
-    private final SimpleObjectProperty<Restoran> restoranProperty;
+public class UrediRestoranController implements Injectable {
+    private final Restoran restoran;
+    private final DataStorage storage;
     private File newLogo;
     @FXML
     private Label successLabel;
@@ -49,11 +46,11 @@ public class UrediRestoranController implements DataStorageInjectable {
     private TextField adresaTextField;
     @FXML
     private ListView<Jelo> jelaListView;
-    private DataStorage storage;
     private boolean logoChanged = false;
 
-    public UrediRestoranController() {
-        restoranProperty = new SimpleObjectProperty<>();
+    public UrediRestoranController(DataStorage storage, Restoran restoran) {
+        this.restoran = restoran;
+        this.storage = storage;
     }
 
     public void initialize() {
@@ -79,21 +76,13 @@ public class UrediRestoranController implements DataStorageInjectable {
             cell.setAlignment(Pos.CENTER);
             return cell;
         });
-        restoranProperty.addListener((obs, oldValue, newValue) -> {
-            if (newValue != null) {
-                jelaListView.getItems().setAll(newValue.getJela());
-                nazivTextField.setText(newValue.getNaziv());
-                adresaTextField.setText(newValue.getAdresa());
-                if (newValue.getLogo() == null) {
-                    logoView.setImage(ImageUtils.textToImage("Nema\nslike", (int) logoView.getFitWidth(), (int) logoView.getFitHeight()));
-                } else logoView.setImage(newValue.getLogo());
-            }
-        });
-        jelaListView.sceneProperty().addListener((obs, oldValue, newValue) -> {
-            if (newValue != null) {
-                restoranProperty.set((Restoran) newValue.getRoot().getUserData());
-            }
-        });
+        jelaListView.getItems().setAll(restoran.getJela());
+        nazivTextField.setText(restoran.getNaziv());
+        adresaTextField.setText(restoran.getAdresa());
+        if (restoran.getLogo() == null) {
+            logoView.setImage(ImageUtils.textToImage("Nema\nslike", (int) logoView.getFitWidth(), (int) logoView.getFitHeight()));
+        } else logoView.setImage(restoran.getLogo());
+
         ContextMenu logoContextMenu = new ContextMenu();
         MenuItem obrisiLogo = new MenuItem("Obrisi logo");
         obrisiLogo.addEventHandler(ActionEvent.ACTION, this::onDeleteLogo);
@@ -113,11 +102,6 @@ public class UrediRestoranController implements DataStorageInjectable {
         jelaListView.setContextMenu(jelaContextMenu);
         jelaListView.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) ->
                 obrisiJelo.setDisable(newValue == null));
-    }
-
-    @Override
-    public void setDataStorage(DataStorage storage) {
-        this.storage = storage;
     }
 
     public void onSacuvaj() {
@@ -148,7 +132,7 @@ public class UrediRestoranController implements DataStorageInjectable {
             }
         }
 
-        storage.modifyRestoran(restoranProperty.get(), fields)
+        storage.modifyRestoran(restoran, fields)
                 .whenComplete(((unused, throwable) -> {
                     if (throwable != null) {
                         if (throwable.getCause() instanceof RestoranExistException) {
@@ -178,10 +162,8 @@ public class UrediRestoranController implements DataStorageInjectable {
     }
 
     public void onDodajJelo(ActionEvent actionEvent) {
-        Parent parent = ViewLoader.load(TabbyViews.DODAJ_JELO, clazz -> ControllerFactory.controllerForClass(clazz, storage, null));
         Scene scene = jelaListView.getScene();
-        scene.setUserData(restoranProperty.get());
-        parent.setUserData(new Pair<>(scene, jelaListView));
+        Parent parent = ViewLoader.load(TabbyViews.DODAJ_JELO, storage, scene, jelaListView, restoran);
         ((Stage) jelaListView.getScene().getWindow()).setScene(new Scene(parent));
     }
 

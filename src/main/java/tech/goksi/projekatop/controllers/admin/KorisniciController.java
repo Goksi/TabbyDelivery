@@ -55,11 +55,7 @@ public class KorisniciController implements Injectable {
         contextMenu.getItems().add(urediKorisnika);
         contextMenu.getItems().add(obrisiKorisnika);
         korisniciListView.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
-            if (newValue == null) {
-                korisniciListView.setContextMenu(null);
-            } else {
-                korisniciListView.setContextMenu(contextMenu);
-            }
+            korisniciListView.setContextMenu(newValue == null ? null : contextMenu);
         });
         korisniciListView.setItems(korisniciList);
         populateListView();

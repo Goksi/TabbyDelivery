@@ -67,11 +67,7 @@ public class RestoraniController implements Injectable {
         contextMenu.getItems().add(obrisiRestoran);
 
         restoraniListView.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
-            if (newValue == null) {
-                restoraniListView.setContextMenu(null);
-            } else {
-                restoraniListView.setContextMenu(contextMenu);
-            }
+            restoraniListView.setContextMenu(newValue == null ? null : contextMenu);
         });
         populateListView();
     }

@@ -1,9 +1,11 @@
 package tech.goksi.projekatop.models;
 
+import javafx.beans.Observable;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
 
 import java.util.Optional;
 
@@ -12,7 +14,7 @@ public class PorudzbinaMaker {
     private final IntegerProperty ukupnaCenaProperty;
 
     public PorudzbinaMaker() {
-        narucenaJela = new SimpleListProperty<>();
+        narucenaJela = new SimpleListProperty<>(FXCollections.observableArrayList(narucenoJelo -> new Observable[]{narucenoJelo.countProperty()}));
         ukupnaCenaProperty = new SimpleIntegerProperty();
     }
 
@@ -24,7 +26,7 @@ public class PorudzbinaMaker {
                     return novoNarucenoJelo;
                 });
         narucenoJelo.addQuantity();
-        ukupnaCenaProperty.add(narucenoJelo.getJelo().getCena());
+        ukupnaCenaProperty.set(ukupnaCenaProperty.get() + narucenoJelo.getJelo().getCena());
     }
 
     public void obrisiJelo(Jelo jelo) {
@@ -34,7 +36,14 @@ public class PorudzbinaMaker {
         if (narucenoJelo.getCount() == 0) {
             narucenaJela.remove(narucenoJelo);
         }
-        ukupnaCenaProperty.subtract(narucenoJelo.getJelo().getCena());
+        ukupnaCenaProperty.set(ukupnaCenaProperty.get() - narucenoJelo.getJelo().getCena());
+    }
+
+    public void obrisiSvaJela(Jelo jelo) {
+        NarucenoJelo narucenoJelo = findJelo(jelo).orElse(null);
+        if (narucenoJelo == null) return;
+        narucenaJela.remove(narucenoJelo);
+        ukupnaCenaProperty.set(ukupnaCenaProperty.get() - narucenoJelo.getCena());
     }
 
     public ListProperty<NarucenoJelo> narucenaJelaProperty() {

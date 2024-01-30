@@ -1,33 +1,44 @@
 package tech.goksi.projekatop.models;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+
 public class NarucenoJelo {
     private final Jelo jelo;
-    private int count;
+    private final IntegerProperty countProperty;
 
     public NarucenoJelo(Jelo jelo) {
         this.jelo = jelo;
-        this.count = 0;
+        this.countProperty = new SimpleIntegerProperty(0);
     }
 
     public void addQuantity() {
-        count++;
+        countProperty.set(countProperty.get() + 1);
     }
 
     public void removeQuantity() {
-        count--;
+        countProperty.set(countProperty.get() - 1);
     }
 
     public Jelo getJelo() {
         return jelo;
     }
 
+    public IntegerProperty countProperty() {
+        return countProperty;
+    }
+
+    public int getCena() {
+        return jelo.getCena() * countProperty.get();
+    }
+
     public int getCount() {
-        return count;
+        return countProperty.get();
     }
 
     @Override
     public String toString() {
-        return "Naziv: %s Kolicina: x%d".formatted(jelo.getNaziv(), count);
+        return "Naziv: %s Kolicina: x%d".formatted(jelo.getNaziv(), countProperty.get());
     }
 
     @Override
@@ -37,14 +48,14 @@ public class NarucenoJelo {
 
         NarucenoJelo that = (NarucenoJelo) o;
 
-        if (count != that.count) return false;
+        if (countProperty != that.countProperty) return false;
         return jelo.equals(that.jelo);
     }
 
     @Override
     public int hashCode() {
         int result = jelo.hashCode();
-        result = 31 * result + count;
+        result = 31 * result + countProperty.get();
         return result;
     }
 }

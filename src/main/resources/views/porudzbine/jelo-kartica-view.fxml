@@ -10,7 +10,7 @@
             xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="tech.goksi.projekatop.controllers.porudzbine.JeloKarticaController">
     <children>
-        <ImageView fx:id="imageView" fitHeight="163.0" fitWidth="200.0" layoutX="6.0" layoutY="7.0" pickOnBounds="true"
+        <ImageView fx:id="imageView" fitHeight="165.0" fitWidth="194.0" layoutX="4.0" layoutY="5.0" pickOnBounds="true"
                    preserveRatio="true"/>
         <Label fx:id="infoLabel" alignment="CENTER" layoutX="-1.0" layoutY="170.0" prefHeight="100.0" prefWidth="200.0"
                text="Naziv: %s&#10;Cena: %d din&#10;" textAlignment="CENTER" wrapText="true">

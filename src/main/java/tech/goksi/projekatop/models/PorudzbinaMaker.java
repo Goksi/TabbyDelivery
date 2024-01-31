@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 
+import java.util.List;
 import java.util.Optional;
 
 public class PorudzbinaMaker {
@@ -51,12 +52,20 @@ public class PorudzbinaMaker {
         ukupnaCenaProperty.set(ukupnaCenaProperty.get() - narucenoJelo.getCena());
     }
 
+    public boolean isEmpty() {
+        return narucenaJela.isEmpty();
+    }
+
     public ListProperty<NarucenoJelo> narucenaJelaProperty() {
         return narucenaJela;
     }
 
     public IntegerProperty ukupnaCenaPropertyProperty() {
         return ukupnaCenaProperty;
+    }
+
+    public List<NarucenoJelo> getJela() {
+        return narucenaJelaProperty().get();
     }
 
     private Optional<NarucenoJelo> findJelo(Jelo jelo) {

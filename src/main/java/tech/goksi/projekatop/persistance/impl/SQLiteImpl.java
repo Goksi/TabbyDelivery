@@ -3,9 +3,7 @@ package tech.goksi.projekatop.persistance.impl;
 import javafx.scene.image.Image;
 import tech.goksi.projekatop.exceptions.KorisnikExistException;
 import tech.goksi.projekatop.exceptions.RestoranExistException;
-import tech.goksi.projekatop.models.Jelo;
-import tech.goksi.projekatop.models.Korisnik;
-import tech.goksi.projekatop.models.Restoran;
+import tech.goksi.projekatop.models.*;
 import tech.goksi.projekatop.persistance.ConnectionWrapper;
 import tech.goksi.projekatop.persistance.DataStorage;
 import tech.goksi.projekatop.utils.EncryptionUtils;
@@ -176,7 +174,7 @@ public class SQLiteImpl implements DataStorage {
         if (fields.isEmpty()) throw new IllegalArgumentException("Makar jedna stvar mora biti promenjena !");
         Object[] params = Arrays.copyOf(fields.values().toArray(), fields.size() + 1);
         params[fields.size()] = korisnik.getId();
-        String query = buildQuery("UPDATE Korisnici SET %s WHERE id = ?", fields);
+        String query = buildUpdateQuery("UPDATE Korisnici SET %s WHERE id = ?", fields);
         return CompletableFuture.runAsync(() -> {
             String username = (String) fields.get("username");
             if (username != null) {
@@ -275,7 +273,7 @@ public class SQLiteImpl implements DataStorage {
         if (fields.isEmpty()) throw new IllegalArgumentException("Makar jedna stvar mora biti promenjena !");
         Object[] params = Arrays.copyOf(fields.values().toArray(), fields.size() + 1);
         params[fields.size()] = restoran.getId();
-        String query = buildQuery("UPDATE Restorani SET %s WHERE id = ?", fields);
+        String query = buildUpdateQuery("UPDATE Restorani SET %s WHERE id = ?", fields);
         return CompletableFuture.runAsync(() -> {
             connection.withConnection(query, preparedStatement -> {
                 try {
@@ -328,7 +326,49 @@ public class SQLiteImpl implements DataStorage {
         });
     }
 
-    private String buildQuery(String template, Map<String, Object> fields) {
+    @Override
+    public CompletableFuture<Void> dodajPorudzbinu(Korisnik korisnik, PorudzbinaMaker porudzbinaMaker) {
+        return CompletableFuture.runAsync(() -> {
+            connection.withConnection("INSERT INTO Porudzbine(korisnik, vreme) VALUES (?, ?)", preparedStatement -> {
+                try {
+                    preparedStatement.executeUpdate();
+                } catch (SQLException e) {
+                    LOGGER.log(Level.SEVERE, "Greska pri dodavanju porudzbine !", e);
+                    throw new IllegalStateException("Porudzbina nije dodata !");
+                }
+            }, korisnik.getId(), Date.from(Instant.now()));
+            int porudzbinaId = connection.withConnection("SELECT last_insert_rowid()", preparedStatement -> {
+                try {
+                    ResultSet resultSet = preparedStatement.executeQuery();
+                    return resultSet.getInt(1);
+                } catch (SQLException e) {
+                    return -1;
+                }
+            });
+            if (porudzbinaId == -1) return;
+            List<NarucenoJelo> narucenaJela = porudzbinaMaker.getJela();
+            Object[] args = new Object[narucenaJela.size() * 3];
+            int counter = 0;
+            String baseQuery = "INSERT INTO Porudzbine_Jela(jelo, porudzbina, kolicina) VALUES %s";
+            StringJoiner joiner = new StringJoiner(",");
+            for (NarucenoJelo narucenoJelo : narucenaJela) {
+                joiner.add("(?, ?, ?)");
+                args[counter++] = narucenoJelo.getJelo().getId();
+                args[counter++] = porudzbinaId;
+                args[counter++] = narucenoJelo.getCount();
+            }
+            String query = baseQuery.formatted(joiner.toString());
+            connection.withConnection(query, preparedStatement -> {
+                try {
+                    preparedStatement.executeUpdate();
+                } catch (SQLException e) {
+                    LOGGER.log(Level.SEVERE, "Greska pri povezivanju jela sa porudzbinom !", e);
+                }
+            }, args);
+        });
+    }
+
+    private String buildUpdateQuery(String template, Map<String, Object> fields) {
         StringJoiner updateBuilder = new StringJoiner(",");
         for (String key : fields.keySet()) {
             updateBuilder.add(key + "=?");

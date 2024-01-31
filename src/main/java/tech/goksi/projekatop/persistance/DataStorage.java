@@ -2,6 +2,7 @@ package tech.goksi.projekatop.persistance;
 
 import tech.goksi.projekatop.models.Jelo;
 import tech.goksi.projekatop.models.Korisnik;
+import tech.goksi.projekatop.models.PorudzbinaMaker;
 import tech.goksi.projekatop.models.Restoran;
 
 import java.io.InputStream;
@@ -33,4 +34,6 @@ public interface DataStorage {
     CompletableFuture<Jelo> addJeloToRestoran(Restoran restoran, String naziv, InputStream slika, int cena);
 
     CompletableFuture<Void> obrisiJelo(Jelo jelo);
+
+    CompletableFuture<Void> dodajPorudzbinu(Korisnik korisnik, PorudzbinaMaker porudzbinaMaker);
 }

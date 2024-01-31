@@ -3,11 +3,11 @@ package tech.goksi.projekatop.controllers.porudzbine;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import tech.goksi.projekatop.TabbyViews;
 import tech.goksi.projekatop.models.Restoran;
@@ -22,8 +22,6 @@ public class RestoranKarticaController implements Injectable {
     private static boolean otvoren = false;
     private final Restoran restoran;
     private final DataStorage storage;
-    @FXML
-    private AnchorPane pane;
     @FXML
     private ImageView logoView;
     @FXML
@@ -43,8 +41,15 @@ public class RestoranKarticaController implements Injectable {
     }
 
     @SuppressWarnings("ConstantConditions")
-    public void onClick(MouseEvent mouseEvent) {
+    public void onClick() {
         if (otvoren) return;
+        if (restoran.getJela().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Ovaj restoran nema ni jedno jelo, nemoguce je napraviti porudzbinu", ButtonType.OK);
+            alert.setHeaderText(null);
+            alert.setTitle("Upozorenje");
+            alert.show();
+            return;
+        }
         Parent parent = ViewLoader.load(TabbyViews.PORUDZBINA, storage, restoran);
         Stage stage = new Stage();
         stage.setTitle("Naruci iz restorana " + restoran.getNaziv());

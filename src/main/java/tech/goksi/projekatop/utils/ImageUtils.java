@@ -5,6 +5,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.text.Font;
 
@@ -24,5 +25,22 @@ public final class ImageUtils {
         Scene scene = new Scene(new Group(label));
         scene.snapshot(image);
         return image;
+    }
+
+    public static void centerImage(ImageView imageView) {
+        Image image = imageView.getImage();
+        if (image != null) {
+
+            double ratioX = imageView.getFitWidth() / image.getWidth();
+            double ratioY = imageView.getFitHeight() / image.getHeight();
+
+            double coefficient = Math.min(ratioX, ratioY);
+
+            double w = image.getWidth() * coefficient;
+            double h = image.getHeight() * coefficient;
+
+            imageView.setX((imageView.getFitWidth() - w) / 2);
+            imageView.setY((imageView.getFitHeight() - h) / 2);
+        }
     }
 }

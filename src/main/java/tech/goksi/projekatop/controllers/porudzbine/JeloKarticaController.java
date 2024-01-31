@@ -27,6 +27,7 @@ public class JeloKarticaController implements Injectable {
 
     public void initialize() {
         imageView.setImage(Objects.requireNonNullElseGet(jelo.getImage(), () -> ImageUtils.textToImage("Nema\nslike", (int) imageView.getFitWidth(), (int) imageView.getFitHeight())));
+        ImageUtils.centerImage(imageView);
         infoLabel.setText(infoLabel.getText().formatted(jelo.getNaziv(), jelo.getCena()));
     }
 

@@ -1,17 +1,13 @@
 package tech.goksi.projekatop.controllers.porudzbine;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import tech.goksi.projekatop.TabbyViews;
-import tech.goksi.projekatop.models.Jelo;
-import tech.goksi.projekatop.models.NarucenoJelo;
-import tech.goksi.projekatop.models.PorudzbinaMaker;
-import tech.goksi.projekatop.models.Restoran;
+import tech.goksi.projekatop.models.*;
 import tech.goksi.projekatop.persistance.DataStorage;
 import tech.goksi.projekatop.utils.Injectable;
 import tech.goksi.projekatop.utils.ViewLoader;
@@ -22,6 +18,7 @@ public class PorudzbinaController implements Injectable {
     private final PorudzbinaMaker trenutnaPorudzbina;
     private final Restoran restoran;
     private final DataStorage storage;
+    private final Korisnik trenutniKorisnik;
     @FXML
     private ListView<NarucenoJelo> racunListView;
     @FXML
@@ -29,10 +26,11 @@ public class PorudzbinaController implements Injectable {
     @FXML
     private GridPane gridPane;
 
-    public PorudzbinaController(DataStorage storage, Restoran restoran) {
+    public PorudzbinaController(DataStorage storage, Restoran restoran, Korisnik trenutniKorisnik) {
         trenutnaPorudzbina = new PorudzbinaMaker();
         this.storage = storage;
         this.restoran = restoran;
+        this.trenutniKorisnik = trenutniKorisnik;
     }
 
     public void initialize() {
@@ -75,5 +73,34 @@ public class PorudzbinaController implements Injectable {
 
     public void onResetujPorudzbinu() {
         trenutnaPorudzbina.reset();
+    }
+
+    public void onZavrsiPorudzbinu() {
+        if (trenutnaPorudzbina.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Ne mozete predati praznu porudzbinu !", ButtonType.OK);
+            alert.setHeaderText(null);
+            alert.setTitle("Upozorenje");
+            alert.show();
+            return;
+        }
+        storage.dodajPorudzbinu(trenutniKorisnik, trenutnaPorudzbina)
+                .whenComplete((unused, throwable) -> {
+                    if (throwable != null) {
+                        Platform.runLater(() -> {
+                            Alert alert = new Alert(Alert.AlertType.ERROR, "Greska pri dodavanju porudzbine, proverite log !", ButtonType.OK);
+                            alert.setHeaderText(null);
+                            alert.setTitle("Greska");
+                            alert.show();
+                        });
+                        return;
+                    }
+                    Platform.runLater(() -> {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Uspesno zavrsena porudzbina !", ButtonType.OK);
+                        alert.setHeaderText(null);
+                        alert.setTitle("Uspesno");
+                        alert.showAndWait();
+                        ((Stage) cenaLabel.getScene().getWindow()).close();
+                    });
+                });
     }
 }

@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import tech.goksi.projekatop.TabbyViews;
+import tech.goksi.projekatop.models.Korisnik;
 import tech.goksi.projekatop.models.Restoran;
 import tech.goksi.projekatop.persistance.DataStorage;
 import tech.goksi.projekatop.utils.ImageUtils;
@@ -22,15 +23,17 @@ public class RestoranKarticaController implements Injectable {
     private static boolean otvoren = false;
     private final Restoran restoran;
     private final DataStorage storage;
+    private final Korisnik trenutniKorisnik;
     @FXML
     private ImageView logoView;
     @FXML
     private Label infoLabel;
 
 
-    public RestoranKarticaController(DataStorage storage, Restoran restoran) {
+    public RestoranKarticaController(DataStorage storage, Restoran restoran, Korisnik trenutniKorisnik) {
         this.storage = storage;
         this.restoran = restoran;
+        this.trenutniKorisnik = trenutniKorisnik;
     }
 
     public void initialize() {
@@ -50,7 +53,7 @@ public class RestoranKarticaController implements Injectable {
             alert.show();
             return;
         }
-        Parent parent = ViewLoader.load(TabbyViews.PORUDZBINA, storage, restoran);
+        Parent parent = ViewLoader.load(TabbyViews.PORUDZBINA, storage, restoran, trenutniKorisnik);
         Stage stage = new Stage();
         stage.setTitle("Naruci iz restorana " + restoran.getNaziv());
         stage.setResizable(false);

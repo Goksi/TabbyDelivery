@@ -9,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Pagination;
 import javafx.util.Callback;
 import tech.goksi.projekatop.TabbyViews;
+import tech.goksi.projekatop.models.Korisnik;
 import tech.goksi.projekatop.models.Restoran;
 import tech.goksi.projekatop.persistance.DataStorage;
 import tech.goksi.projekatop.utils.Injectable;
@@ -20,12 +21,14 @@ public class NovaPorudzbinaController implements Injectable {
     private static final int RESTORANI_PER_PAGE = 4;
     private final DataStorage storage;
     private final ObservableList<Restoran> restorani;
+    private final Korisnik trenutniKorisnik;
     @FXML
     private Pagination pagination;
 
 
-    public NovaPorudzbinaController(DataStorage storage) {
+    public NovaPorudzbinaController(DataStorage storage, Korisnik trenutniKorisnik) {
         restorani = FXCollections.observableArrayList();
+        this.trenutniKorisnik = trenutniKorisnik;
         this.storage = storage;
     }
 
@@ -37,7 +40,7 @@ public class NovaPorudzbinaController implements Injectable {
                 int numberOfPages = (int) Math.ceil((double) sublist.size() / RESTORANI_PER_PAGE);
                 Platform.runLater(() -> {
                     pagination.setPageCount(numberOfPages);
-                    pagination.setPageFactory(new TabbyPageFactory(sublist, storage));
+                    pagination.setPageFactory(new TabbyPageFactory());
                 });
             }
         });
@@ -45,14 +48,13 @@ public class NovaPorudzbinaController implements Injectable {
                 .thenAccept(restorani::setAll);
     }
 
-    private record TabbyPageFactory(List<Restoran> restorani, DataStorage storage) implements Callback<Integer, Node> {
-
+    private class TabbyPageFactory implements Callback<Integer, Node> {
         @Override
         public Node call(Integer integer) {
             int start = integer * RESTORANI_PER_PAGE;
             int end = Math.min(start + RESTORANI_PER_PAGE, restorani.size());
             List<Restoran> forPage = restorani.subList(start, end);
-            return ViewLoader.load(TabbyViews.RESTORAN_LIST, storage, forPage);
+            return ViewLoader.load(TabbyViews.RESTORAN_LIST, storage, forPage, trenutniKorisnik);
         }
     }
 }

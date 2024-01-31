@@ -26,7 +26,7 @@ public class PageNavigator {
         pages.put(Page.PODESAVANJA, () -> ViewLoader.load(TabbyViews.PODESAVANJA, dataStorage, currentUser));
         pages.put(Page.KORISNICI, () -> ViewLoader.load(TabbyViews.KORISNICI, dataStorage));
         pages.put(Page.RESTORANI, () -> ViewLoader.load(TabbyViews.RESTORANI, dataStorage));
-        pages.put(Page.NOVA_PORUDZBINA, () -> ViewLoader.load(TabbyViews.NOVA_PORUDZBINA, dataStorage));
+        pages.put(Page.NOVA_PORUDZBINA, () -> ViewLoader.load(TabbyViews.NOVA_PORUDZBINA, dataStorage, currentUser));
         goToPage(currentPage);
     }
 

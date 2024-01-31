@@ -20,7 +20,7 @@
     </Label>
     <Button layoutX="868.0" layoutY="610.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="120.0"
             text="Zavrsi porudzbinu"/>
-    <ScrollPane hbarPolicy="NEVER" layoutX="36.0" layoutY="57.0" prefHeight="509.0" prefWidth="499.0">
+    <ScrollPane hbarPolicy="NEVER" layoutX="36.0" layoutY="57.0" prefHeight="509.0" prefWidth="512.0">
         <GridPane fx:id="gridPane" hgap="20.0" prefWidth="498.0" vgap="40">
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
@@ -34,5 +34,14 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
         </padding>
     </ScrollPane>
+    <Button layoutX="818.0" layoutY="610.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="33.0" text="⟳"
+            onAction="#onResetujPorudzbinu">
+        <font>
+            <Font size="15.0"/>
+        </font>
+        <tooltip>
+            <Tooltip text="Resetuj porudzbinu" showDelay="500ms"/>
+        </tooltip>
+    </Button>
 
 </AnchorPane>

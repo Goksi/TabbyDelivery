@@ -39,6 +39,11 @@ public class PorudzbinaMaker {
         ukupnaCenaProperty.set(ukupnaCenaProperty.get() - narucenoJelo.getJelo().getCena());
     }
 
+    public void reset() {
+        narucenaJela.clear();
+        ukupnaCenaProperty.set(0);
+    }
+
     public void obrisiSvaJela(Jelo jelo) {
         NarucenoJelo narucenoJelo = findJelo(jelo).orElse(null);
         if (narucenoJelo == null) return;

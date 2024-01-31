@@ -73,4 +73,7 @@ public class PorudzbinaController implements Injectable {
         trenutnaPorudzbina.obrisiSvaJela(jelo);
     }
 
+    public void onResetujPorudzbinu() {
+        trenutnaPorudzbina.reset();
+    }
 }

@@ -60,6 +60,24 @@ public class SQLiteImpl implements DataStorage {
                     FOREIGN KEY(restoran) REFERENCES Restorani(id) ON DELETE CASCADE
                     )
                     """);
+            statement.addBatch("""
+                    CREATE TABLE IF NOT EXISTS Porudzbine(
+                    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \s
+                    korisnik INTEGER NOT NULL, \s
+                    vreme DATETIME NOT NULL, \s
+                    FOREIGN KEY(korisnik) REFERENCES Korisnici(id) ON DELETE CASCADE
+                    )
+                    """);
+            statement.addBatch("""
+                    CREATE TABLE IF NOT EXISTS Porudzbine_Jela(
+                    id  INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \s
+                    jelo INTEGER NOT NULL, \s
+                    porudzbina INTEGER NOT NULL, \s
+                    kolicina INTEGER NOT NULL CHECK (kolicina >= 1), \s
+                    FOREIGN KEY(jelo) REFERENCES Jela(id) ON DELETE CASCADE, \s
+                    FOREIGN KEY(porudzbina) REFERENCES Porudzbine(id) ON DELETE CASCADE
+                    )
+                    """);
             statement.executeBatch();
             statement.close();
         } catch (SQLException e) {

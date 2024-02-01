@@ -6,9 +6,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import tech.goksi.projekatop.models.Jelo;
-import tech.goksi.projekatop.models.PorudzbinaMaker;
 import tech.goksi.projekatop.utils.ImageUtils;
 import tech.goksi.projekatop.utils.Injectable;
+import tech.goksi.projekatop.utils.PorudzbinaMaker;
 
 import java.util.Objects;
 

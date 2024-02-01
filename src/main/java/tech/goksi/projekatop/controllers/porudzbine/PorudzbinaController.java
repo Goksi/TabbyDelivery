@@ -7,9 +7,13 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import tech.goksi.projekatop.TabbyViews;
-import tech.goksi.projekatop.models.*;
+import tech.goksi.projekatop.models.Jelo;
+import tech.goksi.projekatop.models.Korisnik;
+import tech.goksi.projekatop.models.NarucenoJelo;
+import tech.goksi.projekatop.models.Restoran;
 import tech.goksi.projekatop.persistance.DataStorage;
 import tech.goksi.projekatop.utils.Injectable;
+import tech.goksi.projekatop.utils.PorudzbinaMaker;
 import tech.goksi.projekatop.utils.ViewLoader;
 
 import java.util.Set;

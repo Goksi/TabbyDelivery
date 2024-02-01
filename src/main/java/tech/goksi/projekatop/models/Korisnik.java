@@ -35,4 +35,26 @@ public class Korisnik extends Model {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
         return simpleDateFormat.format(createDate);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Korisnik korisnik = (Korisnik) o;
+
+        if (admin != korisnik.admin) return false;
+        if (!username.equals(korisnik.username)) return false;
+        if (!encryptedPassword.equals(korisnik.encryptedPassword)) return false;
+        return createDate.equals(korisnik.createDate);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = username.hashCode();
+        result = 31 * result + encryptedPassword.hashCode();
+        result = 31 * result + createDate.hashCode();
+        result = 31 * result + (admin ? 1 : 0);
+        return result;
+    }
 }

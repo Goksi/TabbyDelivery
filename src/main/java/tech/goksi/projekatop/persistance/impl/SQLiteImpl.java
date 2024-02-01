@@ -3,10 +3,14 @@ package tech.goksi.projekatop.persistance.impl;
 import javafx.scene.image.Image;
 import tech.goksi.projekatop.exceptions.KorisnikExistException;
 import tech.goksi.projekatop.exceptions.RestoranExistException;
-import tech.goksi.projekatop.models.*;
+import tech.goksi.projekatop.models.Jelo;
+import tech.goksi.projekatop.models.Korisnik;
+import tech.goksi.projekatop.models.NarucenoJelo;
+import tech.goksi.projekatop.models.Restoran;
 import tech.goksi.projekatop.persistance.ConnectionWrapper;
 import tech.goksi.projekatop.persistance.DataStorage;
 import tech.goksi.projekatop.utils.EncryptionUtils;
+import tech.goksi.projekatop.utils.PorudzbinaMaker;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -68,10 +72,10 @@ public class SQLiteImpl implements DataStorage {
                     """);
             statement.addBatch("""
                     CREATE TABLE IF NOT EXISTS Porudzbine_Jela(
-                    id  INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \s
                     jelo INTEGER NOT NULL, \s
                     porudzbina INTEGER NOT NULL, \s
                     kolicina INTEGER NOT NULL CHECK (kolicina >= 1), \s
+                    PRIMARY KEY(jelo, porudzbina), \s
                     FOREIGN KEY(jelo) REFERENCES Jela(id) ON DELETE CASCADE, \s
                     FOREIGN KEY(porudzbina) REFERENCES Porudzbine(id) ON DELETE CASCADE
                     )

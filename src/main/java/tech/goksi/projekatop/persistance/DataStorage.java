@@ -2,8 +2,9 @@ package tech.goksi.projekatop.persistance;
 
 import tech.goksi.projekatop.models.Jelo;
 import tech.goksi.projekatop.models.Korisnik;
-import tech.goksi.projekatop.models.PorudzbinaMaker;
+import tech.goksi.projekatop.models.Porudzbina;
 import tech.goksi.projekatop.models.Restoran;
+import tech.goksi.projekatop.utils.PorudzbinaMaker;
 
 import java.io.InputStream;
 import java.util.List;
@@ -36,4 +37,15 @@ public interface DataStorage {
     CompletableFuture<Void> obrisiJelo(Jelo jelo);
 
     CompletableFuture<Void> dodajPorudzbinu(Korisnik korisnik, PorudzbinaMaker porudzbinaMaker);
+
+    CompletableFuture<List<Porudzbina>> getAllPorudzbine();
+
+    default CompletableFuture<List<Porudzbina>> getAllPorudzbine(Korisnik korisnik) {
+        return getAllPorudzbine()
+                .thenApply(porudzbine -> porudzbine
+                        .stream()
+                        .filter(porudzbina -> korisnik.equals(porudzbina.getKorisnik()))
+                        .toList()
+                );
+    }
 }

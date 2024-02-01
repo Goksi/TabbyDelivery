@@ -1,4 +1,4 @@
-package tech.goksi.projekatop.models;
+package tech.goksi.projekatop.utils;
 
 import javafx.beans.Observable;
 import javafx.beans.property.IntegerProperty;
@@ -6,6 +6,8 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
+import tech.goksi.projekatop.models.Jelo;
+import tech.goksi.projekatop.models.NarucenoJelo;
 
 import java.util.List;
 import java.util.Optional;

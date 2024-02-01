@@ -3,10 +3,7 @@ package tech.goksi.projekatop.persistance.impl;
 import javafx.scene.image.Image;
 import tech.goksi.projekatop.exceptions.KorisnikExistException;
 import tech.goksi.projekatop.exceptions.RestoranExistException;
-import tech.goksi.projekatop.models.Jelo;
-import tech.goksi.projekatop.models.Korisnik;
-import tech.goksi.projekatop.models.NarucenoJelo;
-import tech.goksi.projekatop.models.Restoran;
+import tech.goksi.projekatop.models.*;
 import tech.goksi.projekatop.persistance.ConnectionWrapper;
 import tech.goksi.projekatop.persistance.DataStorage;
 import tech.goksi.projekatop.utils.EncryptionUtils;
@@ -213,12 +210,7 @@ public class SQLiteImpl implements DataStorage {
                             try {
                                 ResultSet jeloResultSet = jeloStatement.executeQuery();
                                 while (jeloResultSet.next()) {
-                                    int idJela = jeloResultSet.getInt("id");
-                                    String jeloNaziv = jeloResultSet.getString("naziv");
-                                    int jeloCena = jeloResultSet.getInt("cena");
-                                    byte[] jeloBytes = jeloResultSet.getBytes("image");
-                                    Image slika = jeloBytes != null ? new Image(new ByteArrayInputStream(jeloBytes)) : null;
-                                    jela.add(new Jelo(idJela, jeloNaziv, slika, jeloCena));
+                                    jela.add(extractJelo(jeloResultSet));
                                 }
                             } catch (SQLException e) {
                                 LOGGER.log(Level.SEVERE, "Greska pri preuzimanju jela iz baze !", e);
@@ -370,6 +362,55 @@ public class SQLiteImpl implements DataStorage {
                 }
             }, args);
         });
+    }
+
+    @Override
+    public CompletableFuture<List<Porudzbina>> getAllPorudzbine() {
+        return CompletableFuture.supplyAsync(() -> {
+            List<Porudzbina> porudzbine = new ArrayList<>();
+            connection.withConnection("select * from Porudzbine inner join Korisnici on Korisnici.id = Porudzbine.korisnik", preparedStatement -> {
+                try {
+                    ResultSet porudzbineResultSet = preparedStatement.executeQuery();
+                    while (porudzbineResultSet.next()) {
+                        int idPorudzbine = porudzbineResultSet.getInt("Porudzbine.id");
+                        Date datum = porudzbineResultSet.getDate("vreme");
+                        Korisnik korisnik = new Korisnik(
+                                porudzbineResultSet.getInt("Korisnici.id"),
+                                porudzbineResultSet.getString("username"),
+                                porudzbineResultSet.getString("password"),
+                                porudzbineResultSet.getDate("creationDate"),
+                                porudzbineResultSet.getBoolean("admin")
+                        );
+                        Set<NarucenoJelo> narucenaJela = new HashSet<>();
+                        connection.withConnection("select * from Porudzbine_Jela " +
+                                "inner join Jela on Jela.id = Porudzbine_Jela.jelo " +
+                                "where porudzbina = ?", jelaStatement -> {
+                            try {
+                                ResultSet jeloResultSet = jelaStatement.executeQuery();
+                                Jelo jelo = extractJelo(jeloResultSet);
+                                int kolicina = jeloResultSet.getInt("kolicina");
+                                narucenaJela.add(new NarucenoJelo(jelo, kolicina));
+                            } catch (SQLException e) {
+                                LOGGER.log(Level.SEVERE, "Greska pri fetch-ovanju jela iz porudzbine !", e);
+                            }
+                        }, idPorudzbine);
+                        porudzbine.add(new Porudzbina(idPorudzbine, korisnik, datum, narucenaJela));
+                    }
+                } catch (SQLException e) {
+                    LOGGER.log(Level.SEVERE, "Greska pri fetch-ovanju porudzina !", e);
+                }
+            });
+            return porudzbine;
+        });
+    }
+
+    private Jelo extractJelo(ResultSet resultSet) throws SQLException {
+        int id = resultSet.getInt("id");
+        String naziv = resultSet.getString("naziv");
+        int cena = resultSet.getInt("cena");
+        byte[] slikaBytes = resultSet.getBytes("image");
+        Image slika = slikaBytes != null ? new Image(new ByteArrayInputStream(slikaBytes)) : null;
+        return new Jelo(id, naziv, slika, cena);
     }
 
     private String buildUpdateQuery(String template, Map<String, Object> fields) {

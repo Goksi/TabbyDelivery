@@ -8,8 +8,12 @@ public class NarucenoJelo {
     private final IntegerProperty countProperty;
 
     public NarucenoJelo(Jelo jelo) {
+        this(jelo, 0);
+    }
+
+    public NarucenoJelo(Jelo jelo, int count) {
         this.jelo = jelo;
-        this.countProperty = new SimpleIntegerProperty(0);
+        this.countProperty = new SimpleIntegerProperty(count);
     }
 
     public void addQuantity() {

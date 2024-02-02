@@ -15,7 +15,8 @@ public enum TabbyViews {
     RESTORAN_KARTICA("/views/porudzbine/restoran-kartica-view.fxml"),
     RESTORAN_LIST("/views/porudzbine/restorani-list-view.fxml"),
     PORUDZBINA("/views/porudzbine/porudzbina-view.fxml"),
-    JELO_KARTICA("/views/porudzbine/jelo-kartica-view.fxml");
+    JELO_KARTICA("/views/porudzbine/jelo-kartica-view.fxml"),
+    PORUDZBINE_ADMIN("/views/admin/porudzbine-view.fxml");
 
     private final String path;
 

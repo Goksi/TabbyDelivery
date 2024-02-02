@@ -27,6 +27,7 @@ public class PageNavigator {
         pages.put(Page.KORISNICI, () -> ViewLoader.load(TabbyViews.KORISNICI, dataStorage));
         pages.put(Page.RESTORANI, () -> ViewLoader.load(TabbyViews.RESTORANI, dataStorage));
         pages.put(Page.NOVA_PORUDZBINA, () -> ViewLoader.load(TabbyViews.NOVA_PORUDZBINA, dataStorage, currentUser));
+        pages.put(Page.PORUDZBINE, () -> ViewLoader.load(TabbyViews.PORUDZBINE_ADMIN, dataStorage));
         goToPage(currentPage);
     }
 
@@ -55,7 +56,7 @@ public class PageNavigator {
         MOJE_PORUDZBINE,
         /*Admin*/
         KORISNICI,
-        PORUDZBINE,
+        PORUDZBINE(false),
         RESTORANI;
 
         private final boolean isCached;

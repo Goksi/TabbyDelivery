@@ -368,14 +368,24 @@ public class SQLiteImpl implements DataStorage {
     public CompletableFuture<List<Porudzbina>> getAllPorudzbine() {
         return CompletableFuture.supplyAsync(() -> {
             List<Porudzbina> porudzbine = new ArrayList<>();
-            connection.withConnection("select * from Porudzbine inner join Korisnici on Korisnici.id = Porudzbine.korisnik", preparedStatement -> {
+            connection.withConnection("""
+                    select\s
+                    Porudzbine.id as Porudzbina_id,\s
+                    vreme,\s
+                    Korisnici.id as Korisnik_id,\s
+                    username,\s
+                    password,\s
+                    creationDate,\s
+                    admin\s
+                    from Porudzbine inner join Korisnici on Korisnici.id = Porudzbine.korisnik
+                    """, preparedStatement -> {
                 try {
                     ResultSet porudzbineResultSet = preparedStatement.executeQuery();
                     while (porudzbineResultSet.next()) {
-                        int idPorudzbine = porudzbineResultSet.getInt("Porudzbine.id");
+                        int idPorudzbine = porudzbineResultSet.getInt("Porudzbina_id");
                         Date datum = porudzbineResultSet.getDate("vreme");
                         Korisnik korisnik = new Korisnik(
-                                porudzbineResultSet.getInt("Korisnici.id"),
+                                porudzbineResultSet.getInt("Korisnik_id"),
                                 porudzbineResultSet.getString("username"),
                                 porudzbineResultSet.getString("password"),
                                 porudzbineResultSet.getDate("creationDate"),
@@ -387,9 +397,11 @@ public class SQLiteImpl implements DataStorage {
                                 "where porudzbina = ?", jelaStatement -> {
                             try {
                                 ResultSet jeloResultSet = jelaStatement.executeQuery();
-                                Jelo jelo = extractJelo(jeloResultSet);
-                                int kolicina = jeloResultSet.getInt("kolicina");
-                                narucenaJela.add(new NarucenoJelo(jelo, kolicina));
+                                while (jeloResultSet.next()) {
+                                    Jelo jelo = extractJelo(jeloResultSet);
+                                    int kolicina = jeloResultSet.getInt("kolicina");
+                                    narucenaJela.add(new NarucenoJelo(jelo, kolicina));
+                                }
                             } catch (SQLException e) {
                                 LOGGER.log(Level.SEVERE, "Greska pri fetch-ovanju jela iz porudzbine !", e);
                             }
@@ -401,6 +413,19 @@ public class SQLiteImpl implements DataStorage {
                 }
             });
             return porudzbine;
+        });
+    }
+
+    @Override
+    public CompletableFuture<Void> obrisiPorudzbinu(Porudzbina porudzbina) {
+        return CompletableFuture.runAsync(() -> {
+            connection.withConnection("DELETE FROM Porudzbine WHERE id = ?", preparedStatement -> {
+                try {
+                    preparedStatement.executeUpdate();
+                } catch (SQLException e) {
+                    LOGGER.log(Level.SEVERE, "Problem pri brisanju porudzbine !", e);
+                }
+            }, porudzbina.getId());
         });
     }
 

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import tech.goksi.projekatop.PorudzbinaFilterChoice?>
+<AnchorPane prefHeight="548" prefWidth="1002" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tech.goksi.projekatop.controllers.admin.PorudzbineController">
+    <TableView layoutX="14.0" layoutY="48.0" prefHeight="492.0" prefWidth="981.0" fx:id="tableView">
+        <placeholder>
+            <Label text="Trenutno nema dostupnih porudzbina"/>
+        </placeholder>
+        <columns>
+            <TableColumn fx:id="idColumn" editable="false" prefWidth="235.25" resizable="false" sortable="false"
+                         text="ID"/>
+            <TableColumn fx:id="korisnikColumn" editable="false" prefWidth="235.25" resizable="false" sortable="false"
+                         text="Korisnik"/>
+            <TableColumn fx:id="datumColumn" editable="false" prefWidth="235.25" resizable="false" sortable="false"
+                         text="Datum"/>
+            <TableColumn fx:id="jelaColumn" editable="false" prefWidth="275.25" resizable="false" sortable="false"
+                         text="Jela"/>
+        </columns>
+    </TableView>
+    <Label layoutX="14.0" layoutY="16.0" text="Filtriraj po">
+        <font>
+            <Font size="18.0"/>
+        </font>
+    </Label>
+    <ChoiceBox fx:id="filterChoiceBox" layoutX="105.0" layoutY="18.0" prefHeight="25.0" prefWidth="120.0"
+               onAction="#onChoiceChange">
+        <PorudzbinaFilterChoice fx:constant="ID"/>
+        <PorudzbinaFilterChoice fx:constant="KORISNIK"/>
+    </ChoiceBox>
+    <TextField fx:id="filterTextField" layoutX="240.0" layoutY="18.0"/>
+</AnchorPane>

@@ -48,4 +48,6 @@ public interface DataStorage {
                         .toList()
                 );
     }
+
+    CompletableFuture<Void> obrisiPorudzbinu(Porudzbina porudzbina);
 }

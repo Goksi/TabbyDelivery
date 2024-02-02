@@ -20,6 +20,10 @@ public class Porudzbina extends Model {
         return korisnik;
     }
 
+    public int getCena() {
+        return narucenoJela.stream().mapToInt(NarucenoJelo::getCena).sum();
+    }
+
     public Date getVremePorudzbine() {
         return vremePorudzbine;
     }

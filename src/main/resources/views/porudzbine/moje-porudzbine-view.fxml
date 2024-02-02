@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.text.Font?>
+<AnchorPane prefHeight="548" prefWidth="1002" xmlns="http://javafx.com/javafx/17.0.2-ea"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tech.goksi.projekatop.controllers.porudzbine.MojePorudzbineController">
+    <TableView fx:id="tableView" layoutX="14.0" layoutY="14.0" prefHeight="520.0" prefWidth="487.0">
+        <placeholder>
+            <Label text="Trenutno nema dostupnih porudzbina"/>
+        </placeholder>
+        <columns>
+            <TableColumn fx:id="datumColumn" prefWidth="180.0" text="Datum"/>
+            <TableColumn fx:id="porudzbinaColumn" prefWidth="304.0" text="Porudzbina"/>
+        </columns>
+    </TableView>
+    <Button layoutX="522.0" layoutY="14.0" mnemonicParsing="false" onAction="#onNovaPorudzbina" prefHeight="51.0"
+            prefWidth="106.0" text="Napravi novu porudzbinu" textAlignment="CENTER" wrapText="true"/>
+    <Region layoutX="522.0" layoutY="74.0" prefHeight="377.0" prefWidth="377.0"
+            style="-fx-border-width: 2; -fx-border-color: #1078ff;"/>
+    <Label fx:id="infoLabel" alignment="CENTER" layoutX="529.0" layoutY="82.0" prefHeight="363.0" prefWidth="362.0"
+           text="Ukupna cena: %d din&#10;Moguce otkazati jos: %s" textAlignment="CENTER" wrapText="true">
+        <font>
+            <Font size="25.0"/>
+        </font>
+    </Label>
+</AnchorPane>

@@ -28,6 +28,7 @@ public class PageNavigator {
         pages.put(Page.RESTORANI, () -> ViewLoader.load(TabbyViews.RESTORANI, dataStorage));
         pages.put(Page.NOVA_PORUDZBINA, () -> ViewLoader.load(TabbyViews.NOVA_PORUDZBINA, dataStorage, currentUser));
         pages.put(Page.PORUDZBINE, () -> ViewLoader.load(TabbyViews.PORUDZBINE_ADMIN, dataStorage));
+        pages.put(Page.MOJE_PORUDZBINE, () -> ViewLoader.load(TabbyViews.MOJE_PORUDZBINE, dataStorage, currentUser, this));
         goToPage(currentPage);
     }
 
@@ -38,7 +39,7 @@ public class PageNavigator {
         }
     }
 
-    private void goToPage(Page page) {
+    public void goToPage(Page page) {
         Parent parent = page.isCached ? cachedPages.computeIfAbsent(page, k -> pages.get(k).get()) : pages.get(page).get();
         rootPane.getChildren().setAll(parent);
         Scene scene = rootPane.getScene();
@@ -48,12 +49,12 @@ public class PageNavigator {
         currentPage = page;
     }
 
-    private enum Page {
+    public enum Page {
         /*Moj nalog*/
         PODESAVANJA,
         /*Porudzbine*/
         NOVA_PORUDZBINA(false),
-        MOJE_PORUDZBINE,
+        MOJE_PORUDZBINE(false),
         /*Admin*/
         KORISNICI,
         PORUDZBINE(false),

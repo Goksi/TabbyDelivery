@@ -11,8 +11,7 @@
             fx:controller="tech.goksi.projekatop.controllers.porudzbine.RestoranKarticaController">
     <ImageView fx:id="logoView" fitHeight="141.0" fitWidth="235.0" layoutX="8.0" layoutY="9.0" pickOnBounds="true"
                preserveRatio="true"/>
-    <Label fx:id="infoLabel" layoutX="8.0" layoutY="160.0" prefHeight="62.0" prefWidth="235.0"
-           text="Naziv: %s&#10;Adresa: %s">
+    <Label fx:id="infoLabel" layoutX="8.0" layoutY="160.0" text="Naziv: %s&#10;Adresa: %s" wrapText="true">
         <font>
             <Font size="21.0"/>
         </font>
